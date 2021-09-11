@@ -1,3 +1,4 @@
+import 'package:Se_cuida_ai/cadastro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,11 +28,11 @@ class _loginState extends State<login> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 58),
+                  padding: EdgeInsets.only(bottom: 26),
                   child: Image.asset(
                     "images/logo.png",
-                    width: 200,
-                    height: 150,
+                    width: 250,
+                    height: 200,
                   ),
                 ),
                 Padding(
@@ -92,7 +93,10 @@ class _loginState extends State<login> {
                       ),
                     ),
                     onTap: (){
-
+                      print("tela cadastro");
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => cadastroGeral()));
                     },
                   ),
                 )
