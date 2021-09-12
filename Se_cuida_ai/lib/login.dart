@@ -1,4 +1,4 @@
-import 'package:Se_cuida_ai/cadastro.dart';
+import 'package:Se_cuida_ai/cadastroGeral.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +38,6 @@ class _loginState extends State<login> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: TextField(
-                    autofocus: true,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(

@@ -12,7 +12,7 @@ void main() => runApp(
     home: login(),
     theme: ThemeData(
       primaryColor: Colors.black,
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.yellow)
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.black)
 
     ),
     debugShowCheckedModeBanner: false,
