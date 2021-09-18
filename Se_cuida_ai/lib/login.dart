@@ -10,6 +10,11 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerSenha = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +43,7 @@ class _loginState extends State<login> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 8),
                   child: TextField(
+                    controller: _controllerEmail,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
@@ -52,7 +58,9 @@ class _loginState extends State<login> {
                   )
                 ),
                 TextField(
-                  keyboardType: TextInputType.visiblePassword,
+                  controller: _controllerSenha,
+                  obscureText: true,
+                  keyboardType: TextInputType.text,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),

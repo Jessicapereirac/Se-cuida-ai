@@ -1,16 +1,98 @@
+import 'package:Se_cuida_ai/model/paciente.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'Home.dart';
+import 'model/profissional.dart';
 
 class cadastroProfissional extends StatefulWidget {
+  cadastroProfissional(Paciente p);
+
   @override
   _cadastroProfissionalState createState() => _cadastroProfissionalState();
 }
 
 class _cadastroProfissionalState extends State<cadastroProfissional> {
 
-  String dropdownValue = 'Selecione uma opção:';
+  String profissao = 'Selecione uma opção:';
+  String msgErropf = "";
+  String msgErroreg = "";
+  String msgErroApp = "";
+
+  TextEditingController _controllerRegistro = TextEditingController();
+  TextEditingController _controllerDescricao = TextEditingController();
+
+  Paciente get p => p;
+  //TODO: ENVIAR INFO DE UMA PAGINA P OUTRA
+
+  void _validarDados() {
+    String registro = _controllerRegistro.text;
+    String desc = _controllerDescricao.text;
+
+    if(profissao != 'Selecione uma opção:'){
+      msgErropf = "";
+      if(registro.isNotEmpty && registro.length > 4 ){
+        //TODO: REGISTRO VALIDO VIA API
+        setState(() {
+          msgErroreg = msgErropf = "";
+        });
+
+        Profissional profissional = Profissional();
+        profissional.nome = p.nome;
+        profissional.sobrenome = p.sobrenome;
+        profissional.email = p.email;
+        profissional.senha = p.senha;
+        profissional.dt_nascimento = p.dt_nascimento;
+        profissional.tipo = p.tipo;
+        profissional.genero = p.genero;
+        profissional.registro = registro;
+        profissional.especializacao = profissao;
+        profissional.descricao = desc;
+
+        _cadastrarUsuario(profissional);
+
+      } else{
+        setState(() {
+          msgErroreg = "Insira um registro valido";
+        });
+      }}
+    else{
+      setState(() {
+        msgErropf = "Indique sua especialização";
+      });
+    }
+  }
+
+  void _cadastrarUsuario(Profissional p){
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth.createUserWithEmailAndPassword(
+        email: p.email,
+        password: p.senha
+    ).then((firebaseUser){
+
+      if(msgErroreg.isEmpty && msgErropf.isEmpty && p.tipo == 'profissional'){
+
+        print("tela inicial");
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (context) => telaInicial()));
+      }
+      else{
+        print("erro");
+      }
+
+    }).catchError((error){
+
+      setState(() {
+        msgErroApp = "Verifiue as informações inseridas";
+      });
+    });
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +112,9 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                  padding: EdgeInsets.fromLTRB(12, 10, 12, 16),
+                  padding: EdgeInsets.fromLTRB(12, 10, 12, 1),
                   child: DropdownButton<String>(
-                    value: dropdownValue,
+                    value: profissao,
 
                     alignment: AlignmentDirectional.center,
                     isExpanded: true,
@@ -46,7 +128,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                     ),
                     onChanged: (String newValue) {
                       setState(() {
-                        dropdownValue = newValue;
+                        profissao = newValue;
                       });
                     },
                     items: <String>['Selecione uma opção:','Fisioterapeura', 'Enfermeiro', 'Médico', 'Dentista', 'Massagista', 'Técnico de enfermagem']
@@ -58,9 +140,13 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                     }).toList(),
                   )
               ),
+              Center(
+                child: Text(msgErropf,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: EdgeInsets.only(bottom: 1),
                   child: TextField(
+                    controller: _controllerRegistro,
                     keyboardType: TextInputType.text,
                     style: TextStyle(fontSize: 18),
                     decoration: InputDecoration(
@@ -74,9 +160,13 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                     ),
                   )
               ),
+              Center(
+                child: Text(msgErroreg,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(top: 1, bottom: 10),
                   child: TextField(
+                    controller: _controllerDescricao,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     minLines: 2,
@@ -94,7 +184,6 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                     ),
                   )
               ),
-
 
               Padding(
                   padding: EdgeInsets.only(top: 16, bottom: 10),
@@ -115,16 +204,16 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                             "Cadastrar",
                             style: TextStyle(color: Colors.white, fontSize: 22)),
                         onPressed: () {
-                          print("tela inicial");
-                          Navigator.push(context,
-                              MaterialPageRoute(
-                                  builder: (context) => telaInicial()));
+                          _validarDados();
 
                         },
 
                       )
                     ],
                   )
+              ),
+              Center(
+                child: Text(msgErropf,style: TextStyle(color: Colors.red, fontSize: 12)),
               ),
 
             ],

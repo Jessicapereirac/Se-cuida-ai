@@ -1,4 +1,6 @@
 import 'package:Se_cuida_ai/cadastroProfissional.dart';
+import 'package:Se_cuida_ai/model/paciente.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'Home.dart';
+import 'model/profissional.dart';
 
 class cadastroGeral extends StatefulWidget {
 
@@ -14,18 +17,153 @@ class cadastroGeral extends StatefulWidget {
 }
 
 class _cadastroGeralState extends State<cadastroGeral> {
-  TextEditingController dateinput = TextEditingController();
-  //text editing controller for text field
+
   List<Gender> genders = new List<Gender>();
-  String _tipoUser;
+  String _tipoUser = "";
+  String _userGender = "";
+
+  String msgErro = "";
+  String msgErroApp = "";
+  String msgErroNome = "";
+  String msgErroSn = "";
+  String msgErroEmail = "";
+  String msgErroSenha = "";
+  String msgErroDt = "";
+  String msgErroCel = "";
+  String msgErroGen = "";
+  String msgErroTp = "";
+
+
+
+  TextEditingController _controllerNome = TextEditingController();
+  TextEditingController _controllerSobrenome = TextEditingController();
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerSenha = TextEditingController();
+  TextEditingController _controllerDtnascimento = TextEditingController();
+  TextEditingController _controllerCelular = TextEditingController();
 
   @override
   void initState() {
-    dateinput.text = ""; //set the initial value of text field
     super.initState();
+    _controllerDtnascimento.text = "";
     genders.add(new Gender("Masculino", MdiIcons.genderMale, false));
     genders.add(new Gender("Feminino", MdiIcons.genderFemale, false));
     genders.add(new Gender("Outros", MdiIcons.genderTransgender, false));
+  }
+
+  void _validarDados(){
+    String nome = _controllerNome.text;
+    String sobrenome = _controllerSobrenome.text;
+    String senha = _controllerSenha.text;
+    String email = _controllerEmail.text;
+    String dtnasc = _controllerDtnascimento.text;
+    String cel = _controllerCelular.text;
+
+    if(nome.length > 4){
+      msgErroNome = "";
+      if(sobrenome.length > 6){
+        msgErroSn = "";
+        if(email.isNotEmpty && email.contains("@")){
+          msgErroEmail = "";
+          if(senha.isNotEmpty && senha.length >= 6){
+            msgErroSenha = "";
+            if(dtnasc.isNotEmpty ){
+              msgErroDt = "";
+              //TODO: MAIORES DE 18
+              if(cel.isNotEmpty && cel.length == 11){
+                msgErroCel = "";
+                if(_tipoUser.isNotEmpty ){
+                  msgErroTp = "";
+                  if(_userGender.isNotEmpty ){
+                    setState(() {
+                      msgErro = msgErroNome = msgErroSn = msgErroEmail
+                      = msgErroSenha = msgErroDt = msgErroCel = msgErroGen = msgErroTp = "";
+                    });
+
+                    Paciente paciente = Paciente();
+
+                    paciente.nome = nome;
+                    paciente.sobrenome = sobrenome;
+                    paciente.email = email;
+                    paciente.senha = senha;
+                    paciente.dt_nascimento = dtnasc;
+                    paciente.numero_cel = cel;
+                    paciente.genero = _userGender;
+                    paciente.tipo = _tipoUser;
+
+                    if(_tipoUser == "paciente"){
+                      _cadastrarUsuario(paciente);
+                    }
+
+                    else if(_tipoUser == "profissional"){
+                      print("tela profissional-cadastro");
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => cadastroProfissional(paciente)));
+
+                    }
+
+                  } else{
+                    setState(() {
+                      msgErro = msgErroGen = "Indique um gênero";
+                    });
+                  }} else{
+                  setState(() {
+                    msgErro = msgErroTp = "Indique que tipo de usuario você é";
+                  });
+                }} else{
+                setState(() {
+                  msgErro = msgErroCel = "Insira um número de celular  valido";
+                });
+              }} else{
+              setState(() {
+                msgErro = msgErroDt = "Insira uma data de nascimento valida";
+              });
+            }} else{
+            setState(() {
+              msgErro = msgErroSenha = "Insira uma senha valida";
+            });
+          }} else{
+          setState(() {
+            msgErro = msgErroEmail = "Insira um email valido";
+          });
+        }} else{
+        setState(() {
+          msgErro = msgErroSn = "Insira um sobrenome valido";
+        });
+      }} else{
+      setState(() {
+        msgErro = msgErroNome = "Insira um nome valido";
+      });
+    }
+  }
+
+  void _cadastrarUsuario(Paciente p){
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth.createUserWithEmailAndPassword(
+        email: p.email,
+        password: p.senha
+    ).then((firebaseUser){
+
+      if(msgErro.isEmpty && p.tipo == 'paciente'){
+
+        print("tela inicial");
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (context) => telaInicial()));
+      }
+      else{
+        print("erro");
+      }
+
+    }).catchError((error){
+
+      setState(() {
+        msgErroApp = "Verifiue as informações inseridas";
+      });
+    });
+
   }
 
   @override
@@ -46,14 +184,15 @@ class _cadastroGeralState extends State<cadastroGeral> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: EdgeInsets.only(top: 1, bottom: 1),
                   child: TextField(
+                    controller: _controllerNome,
                     autofocus: true,
                     keyboardType: TextInputType.text,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                        hintText: "Nome completo",
+                        hintText: "Nome",
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -62,9 +201,34 @@ class _cadastroGeralState extends State<cadastroGeral> {
                     ),
                   )
               ),
+              Center(
+                child: Text(msgErroNome,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: EdgeInsets.only(top: 1, bottom: 1),
                   child: TextField(
+                    controller: _controllerSobrenome,
+                    autofocus: true,
+                    keyboardType: TextInputType.text,
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        hintText: "Sobrenome",
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(32)
+                        )
+                    ),
+                  )
+              ),
+              Center(
+                child: Text(msgErroSn,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 1, bottom: 1),
+                  child: TextField(
+                    controller: _controllerEmail,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
@@ -78,10 +242,15 @@ class _cadastroGeralState extends State<cadastroGeral> {
                     ),
                   )
               ),
+              Center(
+                child: Text(msgErroEmail,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(top: 1, bottom: 10),
                   child: TextField(
-                    keyboardType: TextInputType.visiblePassword,
+                    controller: _controllerSenha,
+                    obscureText: true,
+                    keyboardType: TextInputType.text,
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -94,11 +263,14 @@ class _cadastroGeralState extends State<cadastroGeral> {
                     ),
                   )
               ),
+              Center(
+                child: Text(msgErroSenha,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 20),
+                  padding: EdgeInsets.only(bottom: 0),
                   child: Center(
                       child:TextField(
-                        controller: dateinput, //editing controller of this TextField
+                        controller: _controllerDtnascimento, //editing controller of this TextField
                         decoration: InputDecoration(
                             icon: Icon(Icons.calendar_today), //icon of text field
                             labelText: "Data de Nascimento" //label text of field
@@ -118,7 +290,8 @@ class _cadastroGeralState extends State<cadastroGeral> {
                             //you can implement different kind of Date Format here according to your requirement
 
                             setState(() {
-                              dateinput.text = formattedDate; //set output date to TextField value.
+                              _controllerDtnascimento.text = formattedDate;
+                              //set output date to TextField value.
                             });
                           }else{
                             print("Data invalida");
@@ -127,9 +300,13 @@ class _cadastroGeralState extends State<cadastroGeral> {
                       )
                   )
               ),
+              Center(
+                child: Text(msgErroDt,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 1),
+                  padding: EdgeInsets.only(bottom: 0),
                   child: IntlPhoneField(
+                    controller: _controllerCelular,
                     decoration: InputDecoration(
                       labelText: 'Número de Telefone',
                       border: OutlineInputBorder(
@@ -142,8 +319,11 @@ class _cadastroGeralState extends State<cadastroGeral> {
                     },
                   )
               ),
+              Center(
+                child: Text(msgErroCel,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
 
-              Padding(padding: EdgeInsets.only(right: 0, bottom: 10),
+              Padding(padding: EdgeInsets.only(right: 0, bottom: 0),
                 child: Text("Gênero", style: TextStyle(fontSize: 17, color: Colors.black54),)
               ),
               Padding(
@@ -153,7 +333,6 @@ class _cadastroGeralState extends State<cadastroGeral> {
                     children: [
                       Expanded(
                         child: SizedBox(
-
                           height: 90,
                           width: 50,
                           child: ListView.builder(
@@ -166,8 +345,11 @@ class _cadastroGeralState extends State<cadastroGeral> {
                                   splashColor: Colors.grey,
                                   onTap: () {
                                     setState(() {
+
                                       genders.forEach((gender) => gender.isSelected = false);
                                       genders[index].isSelected = true;
+                                      print(genders[index].name);
+                                      _userGender = genders[index].name;
                                     });
                                   },
                                   child: CustomRadio(genders[index]),
@@ -178,8 +360,11 @@ class _cadastroGeralState extends State<cadastroGeral> {
                     ],
                   )
               ),
+              Center(
+                child: Text(msgErroGen,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
 
-              Padding(padding: EdgeInsets.only(right: 0, top:15),
+              Padding(padding: EdgeInsets.only(right: 0, top:0),
                   child: Text("Você é um:", style: TextStyle(fontSize: 17, color: Colors.black54),)
               ),
               Column(
@@ -206,6 +391,9 @@ class _cadastroGeralState extends State<cadastroGeral> {
                       } )
                 ],
               ),
+              Center(
+                child: Text(msgErroTp,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
 
               Padding(
                   padding: EdgeInsets.only(top: 16, bottom: 10),
@@ -226,23 +414,16 @@ class _cadastroGeralState extends State<cadastroGeral> {
                             "Avançar",
                             style: TextStyle(color: Colors.white, fontSize: 22)),
                         onPressed: () {
-                          if(_tipoUser == 'profissional'){
-                            print("tela profissional-cadastro");
-                            Navigator.push(context,
-                                MaterialPageRoute(
-                                    builder: (context) => cadastroProfissional()));
-                          }
-                          else{
-                            print("tela inicial");
-                            Navigator.push(context,
-                                MaterialPageRoute(
-                                    builder: (context) => telaInicial()));
-                          }
+                          _validarDados();
+
                         },
 
                       )
                     ],
                   )
+              ),
+              Center(
+                child: Text(msgErroApp,style: TextStyle(color: Colors.red, fontSize: 12)),
               ),
 
             ],
@@ -255,6 +436,7 @@ class _cadastroGeralState extends State<cadastroGeral> {
     );
   }
 }
+
 class CustomRadio extends StatelessWidget {
   Gender _gender;
 
