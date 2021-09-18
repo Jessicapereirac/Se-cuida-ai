@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "401557986371",
+    "project_id": "projeto-final-se-cuida-ai",
+    "storage_bucket": "projeto-final-se-cuida-ai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401557986371:android:bbd453f4c71e171b9f88f6",
+        "android_client_info": {
+          "package_name": "com.example.Se_cuida_ai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401557986371-i2ce0nt19a4tkg6gdu57ok8cfga596n2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLZZk4TpX8eBy97KHiUq_-BL2d58OwymU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401557986371-i2ce0nt19a4tkg6gdu57ok8cfga596n2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -26,6 +26,12 @@ dependencies:
   intl: ^0.17.0
   intl_phone_field: ^2.1.0
   material_design_icons_flutter: 4.0.5955
+  firebase_core: ^1.0.1 #Recursos básicos
+  cloud_firestore: ^1.0.1 #Banco de dados
+  firebase_storage: ^8.0.0 #Armazenamento de arquivos
+  firebase_auth: ^1.0.1 #Autenticação de usuário
+  image_picker: ^0.6.0+10
+
 
   flutter_localizations:
     sdk: flutter
