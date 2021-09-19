@@ -7,7 +7,10 @@ import 'Home.dart';
 import 'model/profissional.dart';
 
 class cadastroProfissional extends StatefulWidget {
-  cadastroProfissional(Paciente p);
+
+
+  Paciente p;
+  cadastroProfissional(this.p);
 
   @override
   _cadastroProfissionalState createState() => _cadastroProfissionalState();
@@ -23,8 +26,6 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
   TextEditingController _controllerRegistro = TextEditingController();
   TextEditingController _controllerDescricao = TextEditingController();
 
-  Paciente get p => p;
-  //TODO: ENVIAR INFO DE UMA PAGINA P OUTRA
 
   void _validarDados() {
     String registro = _controllerRegistro.text;
@@ -39,13 +40,13 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
         });
 
         Profissional profissional = Profissional();
-        profissional.nome = p.nome;
-        profissional.sobrenome = p.sobrenome;
-        profissional.email = p.email;
-        profissional.senha = p.senha;
-        profissional.dt_nascimento = p.dt_nascimento;
-        profissional.tipo = p.tipo;
-        profissional.genero = p.genero;
+        profissional.nome = widget.p.nome;
+        profissional.sobrenome = widget.p.sobrenome;
+        profissional.email = widget.p.email;
+        profissional.senha = widget.p.senha;
+        profissional.dt_nascimento = widget.p.dt_nascimento;
+        profissional.tipo = widget.p.tipo;
+        profissional.genero = widget.p.genero;
         profissional.registro = registro;
         profissional.especializacao = profissao;
         profissional.descricao = desc;
