@@ -87,7 +87,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
     }).catchError((error){
 
       setState(() {
-        msgErroApp = "Verifiue as informações inseridas";
+        msgErroApp = "Verifique as informações inseridas";
       });
     });
 
