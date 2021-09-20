@@ -117,7 +117,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                   child: DropdownButton<String>(
                     value: profissao,
 
-                    alignment: AlignmentDirectional.center,
+                    //alignment: AlignmentDirectional.center,
                     isExpanded: true,
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
