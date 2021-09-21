@@ -1,6 +1,9 @@
 import 'package:Se_cuida_ai/cadastroGeral.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'Home.dart';
 
 class login extends StatefulWidget {
   const login({key}) : super(key: key);
@@ -13,6 +16,53 @@ class _loginState extends State<login> {
 
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSenha = TextEditingController();
+
+  String msgErro = "";
+
+  void _validarDados() {
+    String email = _controllerEmail.text;
+    String senha = _controllerSenha.text;
+
+    if(email.isNotEmpty && email.contains("@")){
+      msgErro = "";
+      if(senha.isNotEmpty && senha.length > 5 ){
+        setState(() {
+          msgErro = "";
+        });
+
+       _entrar(email, senha);
+
+      } else{
+        setState(() {
+          msgErro = "Senha invalida";
+        });
+      }}
+    else{
+      setState(() {
+        msgErro = "Email invalido";
+      });
+    }
+  }
+
+  void _entrar( String email, String senha){
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth.signInWithEmailAndPassword(
+        email: email,
+        password: senha
+    ).then((firebaseUser){
+
+      print("tela inicial");
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(
+              builder: (context) => telaInicial()));
+
+    }).catchError((error){
+      setState(() {
+        msgErro = "Login ou senha invalidos, verfique e tente novamente";
+      });
+    });
+  }
 
 
   @override
@@ -87,7 +137,10 @@ class _loginState extends State<login> {
                       child: Text(
                         "Entrar",
                         style: TextStyle(color: Colors.white, fontSize: 22)),
-                      onPressed: () {  },
+                      onPressed: () {
+
+                        _validarDados();
+                      },
 
                     )
                 ),
@@ -106,7 +159,11 @@ class _loginState extends State<login> {
                               builder: (context) => cadastroGeral()));
                     },
                   ),
-                )
+                ),
+                Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                child: Center(
+                  child: Text(msgErro,style: TextStyle(color: Colors.red, fontSize: 12)),
+                ))
               ],
             ),
 

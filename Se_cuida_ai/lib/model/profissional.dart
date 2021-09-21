@@ -14,6 +14,24 @@ class Profissional
 
   Profissional();
 
+  Map<String, dynamic> toMap(){
+    Map<String, dynamic> map ={
+
+      "nome" : this.nome,
+      "sobrenome" : this.sobrenome,
+      "email" : this.email,
+      "dt_nascimento" : this.dt_nascimento,
+      "numero_cel" : this.numero_cel,
+      "genero" : this.genero,
+      "tipo" : this.tipo,
+      "especializacao" : this.especializacao,
+      "registro" : this.registro,
+      "descricao" : this.descricao
+
+    };
+    return map;
+  }
+
   String get descricao => _descricao;
 
   set descricao(String value) {

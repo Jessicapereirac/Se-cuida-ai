@@ -1,4 +1,5 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
         profissional.dt_nascimento = widget.p.dt_nascimento;
         profissional.tipo = widget.p.tipo;
         profissional.genero = widget.p.genero;
+        profissional.numero_cel = widget.p.numero_cel;
         profissional.registro = registro;
         profissional.especializacao = profissao;
         profissional.descricao = desc;
@@ -75,8 +77,14 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
 
       if(msgErroreg.isEmpty && msgErropf.isEmpty && p.tipo == 'profissional'){
 
-        print("tela inicial");
-        Navigator.push(context,
+        FirebaseFirestore db = FirebaseFirestore.instance;
+
+        db.collection("usuarios")
+            .doc(firebaseUser.user.uid)
+            .set(p.toMap());
+
+        print("tela inicial profissional");
+        Navigator.pushReplacement(context,
             MaterialPageRoute(
                 builder: (context) => telaInicial()));
       }

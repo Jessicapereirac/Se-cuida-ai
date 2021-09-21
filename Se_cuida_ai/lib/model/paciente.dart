@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Paciente{
 
   String _nome;
@@ -10,6 +12,21 @@ class Paciente{
   String _tipo;
 
   Paciente();
+
+  Map<String, dynamic> toMap(){
+    Map<String, dynamic> map ={
+
+     "nome" : this.nome,
+     "sobrenome" : this.sobrenome,
+     "email" : this.email,
+     "dt_nascimento" : this.dt_nascimento,
+     "numero_cel" : this.numero_cel,
+     "genero" : this.genero,
+     "tipo" : this.tipo
+
+    };
+    return map;
+  }
 
   String get tipo => _tipo;
 

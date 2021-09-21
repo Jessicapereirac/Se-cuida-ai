@@ -1,10 +1,12 @@
 import 'package:Se_cuida_ai/cadastroProfissional.dart';
 import 'package:Se_cuida_ai/model/paciente.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'Home.dart';
@@ -33,8 +35,6 @@ class _cadastroGeralState extends State<cadastroGeral> {
   String msgErroGen = "";
   String msgErroTp = "";
 
-
-
   TextEditingController _controllerNome = TextEditingController();
   TextEditingController _controllerSobrenome = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
@@ -45,6 +45,8 @@ class _cadastroGeralState extends State<cadastroGeral> {
   @override
   void initState() {
     super.initState();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    //auth.signOut();
     _controllerDtnascimento.text = "";
     genders.add(new Gender("Masculino", MdiIcons.genderMale, false));
     genders.add(new Gender("Feminino", MdiIcons.genderFemale, false));
@@ -148,8 +150,17 @@ class _cadastroGeralState extends State<cadastroGeral> {
 
       if(msgErro.isEmpty && p.tipo == 'paciente'){
 
-        print("tela inicial");
-        Navigator.push(context,
+        FirebaseFirestore db = FirebaseFirestore.instance;
+
+        db.collection("usuarios")
+        .doc(firebaseUser.user.uid)
+        .set(p.toMap()).catchError((error){
+          print("erro:::"+error.toString());
+        });
+
+
+        print("tela inicial paciente");
+        Navigator.pushReplacement(context,
             MaterialPageRoute(
                 builder: (context) => telaInicial()));
       }
@@ -160,7 +171,8 @@ class _cadastroGeralState extends State<cadastroGeral> {
     }).catchError((error){
 
       setState(() {
-        msgErroApp = "Verifiue as informações inseridas";
+        msgErroApp = "Verifique as informações inseridas";
+        print(error.toString());
       });
     });
 
