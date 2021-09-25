@@ -31,6 +31,7 @@ dependencies:
   firebase_storage: ^8.0.0 #Armazenamento de arquivos
   firebase_auth: ^1.4.1 #Autenticação flutter doctor --android-licensesde usuário
   image_picker: ^0.6.0+10
+  hexcolor: ^2.0.5
 
 
 
