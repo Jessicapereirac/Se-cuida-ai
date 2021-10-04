@@ -1,4 +1,4 @@
-import 'package:Se_cuida_ai/atualizarPerfil.dart';
+import 'package:Se_cuida_ai/atualizarPerfilProfissional.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';

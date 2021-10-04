@@ -50,6 +50,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
         profissional.registro = registro;
         profissional.especializacao = profissao;
         profissional.descricao = desc;
+        profissional.imgPerfil = null;
 
         _cadastrarUsuario(profissional);
 

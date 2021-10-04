@@ -11,6 +11,8 @@ class Profissional
   String _especializacao;
   String _registro;
   String _descricao;
+  String imgPerfil;
+
 
   Profissional();
 
@@ -26,7 +28,8 @@ class Profissional
       "tipo" : this.tipo,
       "especializacao" : this.especializacao,
       "registro" : this.registro,
-      "descricao" : this.descricao
+      "descricao" : this.descricao,
+      "imgPerfil" : this.imgPerfil
 
     };
     return map;

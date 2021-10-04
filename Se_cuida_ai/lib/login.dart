@@ -46,8 +46,6 @@ class _loginState extends State<login> {
 
   void _entrar( String email, String senha){
     FirebaseAuth auth = FirebaseAuth.instance;
-    print(email);
-    print(senha);
 
     auth.signInWithEmailAndPassword(
         email: email,

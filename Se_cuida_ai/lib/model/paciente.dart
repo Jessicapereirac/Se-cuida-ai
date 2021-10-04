@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../Home.dart';
 
 class Paciente{
 
@@ -26,6 +30,11 @@ class Paciente{
 
     };
     return map;
+  }
+
+  String cadastrarPaciente(context, Paciente p){
+
+
   }
 
   String get tipo => _tipo;
