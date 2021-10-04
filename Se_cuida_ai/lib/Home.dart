@@ -1,9 +1,11 @@
+import 'package:Se_cuida_ai/atualizarPerfil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class telaInicial extends StatefulWidget {
+import 'listaProfissionais.dart';
 
+class telaInicial extends StatefulWidget {
 
   @override
   _telaInicialState createState() => _telaInicialState();
@@ -11,16 +13,15 @@ class telaInicial extends StatefulWidget {
 
 class _telaInicialState extends State<telaInicial> {
 
-  List profissoes = ['Fisioterapia', 'Enfermagem','Fisioterapia', 'Enfermagem', 'Médico', 'Dentista', 'Massagista', 'Técnico de enfermagem'];
-  List cores = ['#D6967B', '#FF1D59','#845EC2', '#D65DB1', '#FF6F91', '#FF9671', '#FFC75F', 'F9F871'];
-
+  List profissoes = ['Todos','Fisioterapia','Nutricionista', 'Enfermagem','Esteticista', 'Médico', 'Dentista', 'Massagista', 'Técnico de enfermagem'];
+  List cores = ['#845EC2','#D6967B', '#8F6F91', '#FF1D59', '#D65DB1', '#FF6F91', '#FF9671', '#FFC75F', 'F9F871'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar:AppBar(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.black,
         title: Text("Se cuida aí"),
       ),
       body: _viewList()
@@ -42,6 +43,10 @@ class _telaInicialState extends State<telaInicial> {
   Widget _cardprofissao(String prof,int index) => GestureDetector(
     onTap: (){
       print(profissoes[index].toString());
+      String es = profissoes[index].toString();
+      Navigator.push(context,
+          MaterialPageRoute(
+              builder: (context) => perfilUser()));
     },
     child: Container(
       height: double.infinity,

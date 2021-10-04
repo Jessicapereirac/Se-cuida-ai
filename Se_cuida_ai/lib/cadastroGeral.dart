@@ -50,7 +50,7 @@ class _cadastroGeralState extends State<cadastroGeral> {
     _controllerDtnascimento.text = "";
     genders.add(new Gender("Masculino", MdiIcons.genderMale, false));
     genders.add(new Gender("Feminino", MdiIcons.genderFemale, false));
-    genders.add(new Gender("Outros", MdiIcons.genderTransgender, false));
+    genders.add(new Gender("Não-binário", MdiIcons.genderTransgender, false));
   }
 
   void _validarDados(){

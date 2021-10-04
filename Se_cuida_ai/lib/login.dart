@@ -46,6 +46,8 @@ class _loginState extends State<login> {
 
   void _entrar( String email, String senha){
     FirebaseAuth auth = FirebaseAuth.instance;
+    print(email);
+    print(senha);
 
     auth.signInWithEmailAndPassword(
         email: email,
@@ -123,7 +125,7 @@ class _loginState extends State<login> {
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 10),
+                    padding: EdgeInsets.only(top: 16, bottom: 20),
                     child: ElevatedButton(
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 50, vertical: 15)),
