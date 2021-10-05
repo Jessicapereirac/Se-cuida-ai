@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'model/profissional.dart';
 import 'model/paciente.dart';
 
@@ -17,6 +21,9 @@ class _perfilUserState extends State<perfilUser> {
 
   TextEditingController _controllerNome = TextEditingController();
   String  _idUserLogado;
+  File _imgtemp;
+  bool _statusUpload = false;
+  String _urlperfil;
   Profissional p = Profissional();
   
   _recuperarDadosUser() async{
@@ -38,8 +45,59 @@ class _perfilUserState extends State<perfilUser> {
 
   }
 
-  _select_imgCamera(){}
-  _select_imgGaleria(){}
+  Future _recuperandoUrl(TaskSnapshot taskSnapshot) async {
+    String url = await taskSnapshot.ref.getDownloadURL();
+
+    setState(() {
+      _urlperfil = url;
+      p.imgPerfil = url;
+    });
+  }
+  Future _selectImagem( String origem) async {
+
+    switch (origem){
+      case "c":
+        _imgtemp = await ImagePicker.pickImage(source: ImageSource.camera);
+        break;
+      case "g":
+        _imgtemp = await ImagePicker.pickImage(source: ImageSource.gallery);
+        break;
+
+    }
+    setState(() {
+      if(p.imgPerfil != null){
+        _updateImagem();
+      }
+
+    });
+
+  }
+
+  Future _updateImagem() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference pastaRaiz = storage.ref();
+    Reference arq = pastaRaiz
+    .child("perfil")
+    .child(_idUserLogado.toString()+".jpg");
+
+    UploadTask task = arq.putFile(_imgtemp);
+
+    task.snapshotEvents.listen((TaskSnapshot taskSnapshot){
+
+      if(taskSnapshot.state == TaskState.running){
+        setState(() {
+          _statusUpload = true;
+        });
+      }
+      else if(taskSnapshot.state == TaskState.success){
+        _recuperandoUrl(taskSnapshot);
+        setState(() {
+          _statusUpload = false;
+        });
+      }
+    });
+
+  }
 
   @override
   void initState() {
@@ -56,6 +114,8 @@ class _perfilUserState extends State<perfilUser> {
         ),
         body: Column(
           children: [
+            _statusUpload ?CircularProgressIndicator()
+            :Container(),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 200,
@@ -75,8 +135,11 @@ class _perfilUserState extends State<perfilUser> {
                       fit: StackFit.expand,
                       children: [
                         CircleAvatar(
+
                           backgroundColor: Color(0x9FF5FAF9),
-                         // backgroundImage: AssetImage("assets/images/Profile Image.png"),
+                          backgroundImage: p.imgPerfil != null
+                          ? NetworkImage(p.imgPerfil)
+                          : AssetImage("images/user_icon.png"),
                         ),
                         Positioned(
                             bottom: 0,
@@ -93,7 +156,7 @@ class _perfilUserState extends State<perfilUser> {
                                         actions: [
                                           CupertinoActionSheetAction(
                                               onPressed: () async {
-                                                _select_imgCamera();
+                                                _selectImagem("c");
                                               },
                                               child: Text("Câmera", style: TextStyle(
                                                   color: Colors.black
@@ -101,7 +164,7 @@ class _perfilUserState extends State<perfilUser> {
                                               )),
                                           CupertinoActionSheetAction(
                                               onPressed: () async {
-                                                _select_imgGaleria();
+                                                _selectImagem("g");
                                               },
                                               child: Text("Galeria", style: TextStyle(
                                                   color: Colors.black
@@ -124,10 +187,28 @@ class _perfilUserState extends State<perfilUser> {
                             )),
                       ],
                     ),
-                  ),),
+                  ),)
+
 
                 ],
               ),
+            ),
+            Padding(
+                padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                child: TextField(
+                  controller: _controllerNome,
+                  keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(fontSize: 20),
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      hintText: "Nome",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)
+                      )
+                  ),
+                )
             ),
           ],
         )
