@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 class Profissional
 {
   String _nome;
@@ -35,6 +38,15 @@ class Profissional
     return map;
   }
 
+  void atualizarDados (Profissional p, String _idUserLogado) async {
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    db.collection("usuarios")
+        .doc(_idUserLogado)
+        .update(p.toMap());
+
+  }
   String get descricao => _descricao;
 
   set descricao(String value) {
