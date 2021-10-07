@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'model/profissional.dart';
 import 'model/paciente.dart';
@@ -23,22 +24,61 @@ class _perfilUserState extends State<perfilUser> {
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSobrenome = TextEditingController();
   TextEditingController _controllerDescricao = TextEditingController();
+  TextEditingController _controllerCelular = TextEditingController();
+
   String  _idUserLogado;
   File _imgtemp;
   bool _statusUpload = false;
   String _urlperfil;
   Profissional p = Profissional();
-  
+  String msgError = "";
+
+  void _validarDados(){
+    String nome = _controllerNome.text;
+    String sobrenome = _controllerSobrenome.text;
+    String email = _controllerEmail.text;
+    String cel = _controllerCelular.text;
+
+    if(nome.length > 4){
+      if(sobrenome.length > 6){
+        if(email.isNotEmpty && email.contains("@")){
+          if(cel.isNotEmpty && cel.length == 11){
+            setState(() {
+              msgError = "";
+            });
+            _atualizarDados();
+
+          } else{
+            setState(() {
+              msgError = "Insira um número de celular  valido";
+            });
+          }
+        } else{
+          setState(() {
+            msgError = "Insira um email valido";
+          });
+        }} else{
+        setState(() {
+          msgError = "Insira um sobrenome valido";
+        });
+      }} else{
+      setState(() {
+        msgError = "Insira um nome valido";
+      });
+    }
+  }
+
   _recuperarDadosUser() async{
 
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
     _idUserLogado = userLogado.uid;
+    print(_idUserLogado);
 
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentSnapshot snapshot = await db.collection("usuarios")
-    .doc(_idUserLogado)
-    .get();
+        .doc(_idUserLogado)
+        .get();
 
     Map<String, dynamic> dados = snapshot.data();
 
@@ -53,12 +93,13 @@ class _perfilUserState extends State<perfilUser> {
     p.descricao = dados["descricao"];
     p.registro = dados["registro"];
     p.tipo = dados["tipo"];
-
+    p.senha = dados["senha"];
 
     _controllerNome.text = dados["nome"];
-    //_controllerEmail.text = dados["email"];
+    _controllerEmail.text = dados["email"];
     _controllerSobrenome.text = dados["sobrenome"];
     _controllerDescricao.text = dados["descricao"];
+    _controllerCelular.text =  dados["numero_cel"];
     _urlperfil = dados["imgPerfil"];
 
   }
@@ -83,29 +124,32 @@ class _perfilUserState extends State<perfilUser> {
 
     }
     setState(() {
-
-      if(_imgtemp != null){
-        _updateImagem();
-      }
-
+      _updateImagem();
     });
 
   }
 
-  _atualizarDados(){
+  _atualizarDados() {
 
     p.nome = _controllerNome.text;
     p.sobrenome = _controllerSobrenome.text;
     p.descricao = _controllerDescricao.text;
-    /*p.dt_nascimento = dados["dt_nascimento"];
-    p.imgPerfil = dados["imgPerfil"];
-    p.sobrenome = dados["sobrenome"];
-    p.especializacao = dados["especializacao"];
-    p.numero_cel = dados["numero_cel"];
-    p.genero = dados["genero"];
-    p.descricao = dados["descricao"];*/
+    p.numero_cel = _controllerCelular.text;
 
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth.signInWithEmailAndPassword(
+        email: p.email,
+        password: p.senha
+    ).then((userCredencial){
+      userCredencial.user.updateEmail(_controllerEmail.text).catchError((error){
+        print("erro:::"+error.toString());
+      });
+    });
+
+    p.email = _controllerEmail.text;
     p.atualizarDados(p, _idUserLogado);
+
 
   }
 
@@ -142,6 +186,7 @@ class _perfilUserState extends State<perfilUser> {
   }
 
   Widget build(BuildContext context) {
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar:AppBar(
@@ -231,6 +276,12 @@ class _perfilUserState extends State<perfilUser> {
                 ),
               ),
               Padding(
+                padding: EdgeInsets.fromLTRB(32, 5, 32, 0),
+                child: Center(
+                  child: Text(msgError,style: TextStyle(color: Colors.red, fontSize: 12)),
+                ),
+              ),
+              Padding(
                   padding: EdgeInsets.fromLTRB(32, 16, 32, 8),
                   child: TextField(
                     autofocus: true,
@@ -256,13 +307,46 @@ class _perfilUserState extends State<perfilUser> {
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                        hintText: "Nome",
+                        hintText: "Sobrenome",
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32)
                         )
                     ),
+                  )
+              ),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(32, 8, 32, 8),
+                  child: TextField(
+                    controller: _controllerEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        hintText: "Email",
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(32)
+                        )
+                    ),
+                  )
+              ),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(32, 8, 32, 8),
+                  child: IntlPhoneField(
+                    controller: _controllerCelular,
+                    decoration: InputDecoration(
+                      labelText: 'Número de Telefone',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(),
+                      ),
+                    ),
+                    initialCountryCode: 'BR',
+                    onChanged: (phone) {
+                      print(phone.completeNumber);
+                    },
                   )
               ),
               Padding(
@@ -305,11 +389,12 @@ class _perfilUserState extends State<perfilUser> {
                             "Salvar",
                             style: TextStyle(color: Colors.white, fontSize: 22)),
                         onPressed: () {
-                          _atualizarDados();
+                          _validarDados();
 
                         },
 
-                      )
+                      ),
+
                     ],
                   )
               ),

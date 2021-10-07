@@ -14,8 +14,7 @@ class Profissional
   String _especializacao;
   String _registro;
   String _descricao;
-  String imgPerfil;
-
+  String _imgPerfil;
 
   Profissional();
 
@@ -32,7 +31,8 @@ class Profissional
       "especializacao" : this.especializacao,
       "registro" : this.registro,
       "descricao" : this.descricao,
-      "imgPerfil" : this.imgPerfil
+      "imgPerfil" : this.imgPerfil,
+      "senha" : this.senha
 
     };
     return map;
@@ -47,6 +47,7 @@ class Profissional
         .update(p.toMap());
 
   }
+
   String get descricao => _descricao;
 
   set descricao(String value) {
@@ -57,6 +58,12 @@ class Profissional
 
   set registro(String value) {
     _registro = value;
+  }
+
+  String get imgPerfil => _imgPerfil;
+
+  set imgPerfil(String value) {
+    _imgPerfil = value;
   }
 
   String get especializacao => _especializacao;
