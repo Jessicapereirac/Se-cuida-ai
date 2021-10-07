@@ -1,16 +1,10 @@
 import 'package:Se_cuida_ai/cadastroProfissional.dart';
 import 'package:Se_cuida_ai/model/paciente.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-import 'Home.dart';
-import 'model/profissional.dart';
 
 class cadastroGeral extends StatefulWidget {
 
@@ -41,17 +35,6 @@ class _cadastroGeralState extends State<cadastroGeral> {
   TextEditingController _controllerSenha = TextEditingController();
   TextEditingController _controllerDtnascimento = TextEditingController();
   TextEditingController _controllerCelular = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    FirebaseAuth auth = FirebaseAuth.instance;
-    //auth.signOut();
-    _controllerDtnascimento.text = "";
-    genders.add(new Gender("Masculino", MdiIcons.genderMale, false));
-    genders.add(new Gender("Feminino", MdiIcons.genderFemale, false));
-    genders.add(new Gender("Não-binário", MdiIcons.genderTransgender, false));
-  }
 
   void _validarDados(){
     String nome = _controllerNome.text;
@@ -141,41 +124,26 @@ class _cadastroGeralState extends State<cadastroGeral> {
   }
 
   void _cadastrarUsuario(Paciente p){
-    FirebaseAuth auth = FirebaseAuth.instance;
 
-    auth.createUserWithEmailAndPassword(
-        email: p.email,
-        password: p.senha
-    ).then((firebaseUser){
+    if(msgErro.isEmpty && p.tipo == 'paciente'){
 
-      if(msgErro.isEmpty && p.tipo == 'paciente'){
-
-        FirebaseFirestore db = FirebaseFirestore.instance;
-
-        db.collection("usuarios")
-        .doc(firebaseUser.user.uid)
-        .set(p.toMap()).catchError((error){
-          print("erro:::"+error.toString());
-        });
-
-
-        print("tela inicial paciente");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(
-                builder: (context) => telaInicial()));
-      }
-      else{
-        print("erro");
-      }
-
-    }).catchError((error){
-
+      String result = p.cadastrarUsuario(p, context);
       setState(() {
-        msgErroApp = "Verifique as informações inseridas";
-        print(error.toString());
+        msgErroApp = result;
+        print(result);
       });
-    });
+    } else{
+      print("erro");
+    }
+  }
 
+  @override
+  void initState() {
+    super.initState();
+    _controllerDtnascimento.text = "";
+    genders.add(new Gender("Masculino", MdiIcons.genderMale, false));
+    genders.add(new Gender("Feminino", MdiIcons.genderFemale, false));
+    genders.add(new Gender("Não-binário", MdiIcons.genderTransgender, false));
   }
 
   @override

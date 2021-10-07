@@ -1,9 +1,6 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Home.dart';
 import 'model/profissional.dart';
 
 class cadastroProfissional extends StatefulWidget {
@@ -67,40 +64,19 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
   }
 
   void _cadastrarUsuario(Profissional p){
-    FirebaseAuth auth = FirebaseAuth.instance;
 
-    auth.createUserWithEmailAndPassword(
-        email: p.email,
-        password: p.senha
-    ).then((firebaseUser){
+    if(msgErroreg.isEmpty && msgErropf.isEmpty && p.tipo == 'profissional'){
 
-      if(msgErroreg.isEmpty && msgErropf.isEmpty && p.tipo == 'profissional'){
-
-        FirebaseFirestore db = FirebaseFirestore.instance;
-
-        db.collection("usuarios")
-            .doc(firebaseUser.user.uid)
-            .set(p.toMap());
-
-        print("tela inicial profissional");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(
-                builder: (context) => telaInicial()));
-      }
-      else{
-        print("erro");
-      }
-
-    }).catchError((error){
-
+      String result = p.cadastrarUsuario(p, context);
       setState(() {
-        msgErroApp = "Verifique as informações inseridas";
+        msgErroApp = result;
       });
-    });
+    }
+    else{
+      print("erro");
+    }
 
   }
-
-
 
   @override
   Widget build(BuildContext context) {

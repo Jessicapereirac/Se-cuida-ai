@@ -68,7 +68,7 @@ class _perfilUserState extends State<perfilUser> {
     }
   }
 
-  _recuperarDadosUser() async{
+  void _recuperarDadosUser() async{
 
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
@@ -104,32 +104,7 @@ class _perfilUserState extends State<perfilUser> {
 
   }
 
-  Future _recuperandoUrl(TaskSnapshot taskSnapshot) async {
-    String url = await taskSnapshot.ref.getDownloadURL();
-    p.imgPerfil = url;
-
-    setState(() {
-      p.atualizarDados(p,_idUserLogado);
-    });
-  }
-  Future _selectImagem( String origem) async {
-
-    switch (origem){
-      case "c":
-        _imgtemp = await ImagePicker.pickImage(source: ImageSource.camera);
-        break;
-      case "g":
-        _imgtemp = await ImagePicker.pickImage(source: ImageSource.gallery);
-        break;
-
-    }
-    setState(() {
-      _updateImagem();
-    });
-
-  }
-
-  _atualizarDados() {
+  void _atualizarDados() {
 
     p.nome = _controllerNome.text;
     p.sobrenome = _controllerSobrenome.text;
@@ -150,6 +125,32 @@ class _perfilUserState extends State<perfilUser> {
     p.email = _controllerEmail.text;
     p.atualizarDados(p, _idUserLogado);
 
+
+  }
+
+  Future _recuperandoUrl(TaskSnapshot taskSnapshot) async {
+    String url = await taskSnapshot.ref.getDownloadURL();
+    p.imgPerfil = url;
+
+    setState(() {
+      p.atualizarDados(p,_idUserLogado);
+    });
+  }
+
+  Future _selectImagem( String origem) async {
+
+    switch (origem){
+      case "c":
+        _imgtemp = await ImagePicker.pickImage(source: ImageSource.camera);
+        break;
+      case "g":
+        _imgtemp = await ImagePicker.pickImage(source: ImageSource.gallery);
+        break;
+
+    }
+    setState(() {
+      _updateImagem();
+    });
 
   }
 
@@ -186,7 +187,6 @@ class _perfilUserState extends State<perfilUser> {
   }
 
   Widget build(BuildContext context) {
-
     return Scaffold(
         backgroundColor: Colors.white,
         appBar:AppBar(

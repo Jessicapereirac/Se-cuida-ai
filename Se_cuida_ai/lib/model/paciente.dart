@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../Home.dart';
+import '../login.dart';
 
 class Paciente{
 
@@ -14,6 +16,9 @@ class Paciente{
   String _numero_cel;
   String _genero;
   String _tipo;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   Paciente();
 
@@ -32,10 +37,39 @@ class Paciente{
     return map;
   }
 
-  String cadastrarPaciente(context, Paciente p){
+  void atualizarDados (Paciente p, String _idUserLogado) async {
 
+    db.collection("usuarios")
+        .doc(_idUserLogado)
+        .update(p.toMap());
 
   }
+
+  String cadastrarUsuario(Paciente p, context) {
+
+    auth.createUserWithEmailAndPassword(
+        email: p.email,
+        password: p.senha
+    ).then((firebaseUser) {
+      db.collection("usuarios")
+          .doc(firebaseUser.user.uid)
+          .set(p.toMap()).catchError((error){
+        print("erro:::"+error.toString());
+        return error.toString();
+
+      });
+
+      print("tela inicial paciente");
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(
+              builder: (context) => telaInicial()));
+    }).catchError((error) {
+      print("erro:::"+error.toString());
+      return error.toString();
+    });
+
+  }
+
 
   String get tipo => _tipo;
 

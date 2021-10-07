@@ -1,4 +1,5 @@
 import 'package:Se_cuida_ai/cadastroGeral.dart';
+import 'package:Se_cuida_ai/principalPaciente.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _loginState extends State<login> {
       print("tela inicial");
       Navigator.pushReplacement(context,
           MaterialPageRoute(
-              builder: (context) => telaInicial()));
+              builder: (context) => homePaciente()));
 
     }).catchError((error){
       setState(() {
