@@ -152,6 +152,7 @@ class _homePacienteState extends State<homePaciente> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar:AppBar(
+        elevation: 0,
         backgroundColor: Colors.black,
         title: Text("Se cuida aí"),
         actions:[

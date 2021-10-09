@@ -13,23 +13,26 @@ class telaInicial extends StatefulWidget {
 
 class _telaInicialState extends State<telaInicial> {
 
-  List profissoes = ['Todos','Fisioterapia','Nutricionista', 'Enfermagem','Esteticista', 'Médico', 'Dentista', 'Massagista', 'Técnico de enfermagem'];
-  List cores = ['#845EC2','#D6967B', '#8F6F91', '#FF1D59', '#D65DB1', '#FF6F91', '#FF9671', '#FFC75F', 'F9F871'];
-
+  List profissoes = ['Todos','Fisioterapeuta','Nutricionista', 'Enfermeira/o','Esteticista', 'Médica/o', 'Dentista', 'Massagista', 'Técnica/o de enfermagem'];
+  List cores = ['#FFFFFF','#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', 'FFFFFF'];
+  List<Icon> icon = [Icon(Icons.apps_outlined), Icon(Icons.zoom_out_map_sharp), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search)];
+  
+  bool profSelecionada = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[500],
       body: _viewList()
     );
   }
   Widget _viewList() => GridView.builder(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(26),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
+      mainAxisSpacing: 25,
+
+      crossAxisSpacing: 25,
       childAspectRatio: 1),
       itemCount: profissoes.length,
       itemBuilder: (context, index){
@@ -38,7 +41,13 @@ class _telaInicialState extends State<telaInicial> {
       });
 
   Widget _cardprofissao(String prof,int index) => GestureDetector(
+
     onTap: (){
+      setState(() {
+        cores = ['#FFFFFF','#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', 'FFFFFF'];
+        cores[index] = '#FFBF00';
+        profSelecionada = true;
+      });
       print(profissoes[index].toString());
       String es = profissoes[index].toString();
       /*Navigator.push(context,
@@ -46,16 +55,21 @@ class _telaInicialState extends State<telaInicial> {
               builder: (context) => perfilUser()));*/
     },
     child: Container(
+
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
+        image:DecorationImage(
+          image: AssetImage("images/user_icon.png"),
+          fit: BoxFit.cover
+        ),
           color: HexColor(cores[index]),
-          borderRadius: BorderRadius.all(Radius.circular(40)),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withOpacity(0.6),
+                color: Colors.black.withOpacity(0.6),
                 blurRadius: 8,
-                spreadRadius: 5,
+                spreadRadius: 1,
                 offset: Offset(
                     0,3
                 )
@@ -65,15 +79,36 @@ class _telaInicialState extends State<telaInicial> {
       ),
       padding: EdgeInsets.all(16),
 
-      child: GridTile(
-        child: Center(
-          child: Text(
-            prof,
-            style: TextStyle(fontWeight:  FontWeight.bold, fontSize: 20),
-            textAlign: TextAlign.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GridTile(
+            child: Center(
+              child: Text(
+                prof,
+                style: TextStyle( fontSize: 21,fontWeight: FontWeight.bold ,
+                    shadows: [Shadow(
+                        blurRadius: 9,
+                        color: Colors.grey[800],
+                        offset: Offset(
+                            0,3
+                        )
+                    )]),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
-        ),
-      ),
+          Padding(
+            padding: EdgeInsets.only(top:15),
+            child:IconTheme(
+                data: IconThemeData(
+                    size: 47,
+                    color: Colors.black
+                ),
+                child: icon[index])
+          ),
+        ],
+      )
     ),
   );
 }
