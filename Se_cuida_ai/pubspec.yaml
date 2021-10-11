@@ -63,6 +63,16 @@ flutter:
   assets:
      - images/logo.png
      - images/user_icon.png
+     - images/dentista.jpg
+     - images/enfermeiro.jpg
+     - images/estetica.jpg
+     - images/fisio.jpg
+     - images/massagista.jpg
+     - images/medico.jpg
+     - images/nutricao.jpg
+     - images/psicologia.jpg
+     - images/tec_enfermagem.jpg
+     - images/apps.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

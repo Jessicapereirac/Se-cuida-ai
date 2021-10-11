@@ -13,27 +13,25 @@ class telaInicial extends StatefulWidget {
 
 class _telaInicialState extends State<telaInicial> {
 
-  List profissoes = ['Todos','Fisioterapeuta','Nutricionista', 'Enfermeira/o','Esteticista', 'Médica/o', 'Dentista', 'Massagista', 'Técnica/o de enfermagem'];
-  List cores = ['#FFFFFF','#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', 'FFFFFF'];
-  List<Icon> icon = [Icon(Icons.apps_outlined), Icon(Icons.zoom_out_map_sharp), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search), Icon(Icons.search)];
-  
-  bool profSelecionada = false;
+  List profissoes = ['','Fisioterapeuta','Nutricionista', 'Enfermeira/o','Psicólogo','Esteticista', 'Médica/o', 'Dentista', 'Massagista', 'Técnica/o de enfermagem'];
+  List imagens = ['apps.png','fisio.jpg','nutricao.jpg', 'enfermeiro.jpg','psicologia.jpg', 'estetica.jpg', 'medico.jpg', 'dentista.jpg', 'massagista.jpg', 'tec_enfermagem.jpg'];
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[500],
+      backgroundColor: Colors.grey[100],
       body: _viewList()
     );
   }
   Widget _viewList() => GridView.builder(
-      padding: EdgeInsets.all(26),
+      padding: EdgeInsets.all(20),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-      mainAxisSpacing: 25,
+      mainAxisSpacing: 30,
 
-      crossAxisSpacing: 25,
-      childAspectRatio: 1),
+      crossAxisSpacing: 20,
+      childAspectRatio: 0.8),
       itemCount: profissoes.length,
       itemBuilder: (context, index){
         final item = profissoes[index];
@@ -43,11 +41,6 @@ class _telaInicialState extends State<telaInicial> {
   Widget _cardprofissao(String prof,int index) => GestureDetector(
 
     onTap: (){
-      setState(() {
-        cores = ['#FFFFFF','#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', 'FFFFFF'];
-        cores[index] = '#FFBF00';
-        profSelecionada = true;
-      });
       print(profissoes[index].toString());
       String es = profissoes[index].toString();
       /*Navigator.push(context,
@@ -59,11 +52,11 @@ class _telaInicialState extends State<telaInicial> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        image:DecorationImage(
-          image: AssetImage("images/user_icon.png"),
-          fit: BoxFit.cover
+          image:DecorationImage(
+              image:  AssetImage('images/'+imagens[index]),
+              fit: BoxFit.fitWidth
         ),
-          color: HexColor(cores[index]),
+          color: HexColor('#FFFFFF'),
           borderRadius: BorderRadius.all(Radius.circular(10)),
           boxShadow: [
             BoxShadow(
@@ -77,35 +70,24 @@ class _telaInicialState extends State<telaInicial> {
           ]
 
       ),
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.only(top: 8),
 
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          GridTile(
-            child: Center(
-              child: Text(
-                prof,
-                style: TextStyle( fontSize: 21,fontWeight: FontWeight.bold ,
-                    shadows: [Shadow(
-                        blurRadius: 9,
-                        color: Colors.grey[800],
-                        offset: Offset(
-                            0,3
-                        )
-                    )]),
-                textAlign: TextAlign.center,
-              ),
+          Center(
+            child: Text(
+              prof,
+              style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
+                  shadows: [Shadow(
+                      blurRadius: 9,
+                      color: Colors.grey[800],
+                      offset: Offset(
+                          0,3
+                      )
+                  )]),
+              textAlign: TextAlign.center,
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top:15),
-            child:IconTheme(
-                data: IconThemeData(
-                    size: 47,
-                    color: Colors.black
-                ),
-                child: icon[index])
           ),
         ],
       )
