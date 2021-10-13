@@ -37,8 +37,8 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     String email = _controllerEmail.text;
     String cel = _controllerCelular.text;
 
-    if(nome.length > 4){
-      if(sobrenome.length > 6){
+    if(nome.length > 2){
+      if(sobrenome.length > 2){
         if(email.isNotEmpty && email.contains("@")){
           if(cel.isNotEmpty && cel.length == 11){
             setState(() {
@@ -187,10 +187,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar:AppBar(
-          backgroundColor: HexColor('#FFC75F'),
-          title: Text("Se cuida aí"),
-        ),
+
         body: SingleChildScrollView(
           child: Column(
             children: [

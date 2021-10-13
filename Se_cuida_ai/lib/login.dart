@@ -75,9 +75,6 @@ class _loginState extends State<login> {
             MaterialPageRoute(
                 builder: (context) => homeProfissional()));
       }
-
-
-
     }).catchError((error){
       setState(() {
         msgErro = "Login ou senha invalidos, verfique e tente novamente";
@@ -90,7 +87,7 @@ class _loginState extends State<login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white10,
+        backgroundColor: Colors.black,
         title: Text("Se cuida aí"),
       ),
       body: Container(

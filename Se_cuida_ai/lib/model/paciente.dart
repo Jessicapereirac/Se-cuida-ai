@@ -56,14 +56,13 @@ class Paciente{
 
       });
 
-      print("home paciente");
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(
-              builder: (context) => homePaciente()));
+
     }).catchError((error) {
       print("erro:::"+error.toString());
       return error.toString();
     });
+
+    return "ok";
 
   }
 

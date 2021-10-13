@@ -1,5 +1,6 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
+import 'package:Se_cuida_ai/telas%20profissional/principal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -50,6 +51,14 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
         profissional.imgPerfil = null;
 
         _cadastrarUsuario(profissional);
+        print(msgErroApp);
+        if(msgErroApp == 'ok'){
+          print("home profissional");
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(
+                  builder: (context) => homeProfissional()));
+        }
 
       } else{
         setState(() {
@@ -65,10 +74,11 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
 
   void _cadastrarUsuario(Profissional p){
 
-    if(msgErroreg.isEmpty && msgErropf.isEmpty && p.tipo == 'profissional'){
+    if(msgErroreg.isEmpty && msgErropf.isEmpty && p.tipo == '1'){
 
       String result = p.cadastrarUsuario(p, context);
       setState(() {
+        print(result);
         msgErroApp = result;
       });
     }

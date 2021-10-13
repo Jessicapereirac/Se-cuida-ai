@@ -1,4 +1,5 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
+import 'package:Se_cuida_ai/telas%20paciente/principal.dart';
 import 'package:Se_cuida_ai/telas%20profissional/cadastroProfissional.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,9 @@ class _cadastroGeralState extends State<cadastroGeral> {
     String dtnasc = _controllerDtnascimento.text;
     String cel = _controllerCelular.text;
 
-    if(nome.length > 4){
+    if(nome.length > 2){
       msgErroNome = "";
-      if(sobrenome.length > 6){
+      if(sobrenome.length > 2){
         msgErroSn = "";
         if(email.isNotEmpty && email.contains("@")){
           msgErroEmail = "";
@@ -76,11 +77,19 @@ class _cadastroGeralState extends State<cadastroGeral> {
                     paciente.genero = _userGender;
                     paciente.tipo = _tipoUser;
 
-                    if(_tipoUser == "paciente"){
+                    if(_tipoUser == "0"){
                       _cadastrarUsuario(paciente);
+                      if(msgErroApp == 'ok'){
+                        print("home paciente");
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(
+                                builder: (context) => homePaciente()));
+                      }
+
                     }
 
-                    else if(_tipoUser == "profissional"){
+                    else if(_tipoUser == "1" ){
                       print("tela profissional-cadastro");
                       Navigator.push(context,
                           MaterialPageRoute(
@@ -125,7 +134,7 @@ class _cadastroGeralState extends State<cadastroGeral> {
 
   void _cadastrarUsuario(Paciente p){
 
-    if(msgErro.isEmpty && p.tipo == 'paciente'){
+    if(msgErro.isEmpty && p.tipo == '0'){
 
       String result = p.cadastrarUsuario(p, context);
       setState(() {
@@ -157,7 +166,7 @@ class _cadastroGeralState extends State<cadastroGeral> {
         decoration: BoxDecoration(
             color: Colors.white60
         ),
-        padding: EdgeInsets.fromLTRB(20,35,20,10),
+        padding: EdgeInsets.fromLTRB(20,15,20,10),
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
@@ -360,9 +369,9 @@ class _cadastroGeralState extends State<cadastroGeral> {
                         });
                       } ),
                   RadioListTile(
-                      title:Text("1",
+                      title:Text("Profissional",
                           style: TextStyle(fontSize: 16)),
-                      value: "profissional" ,
+                      value: "1" ,
                       groupValue: _tipoUser ,
                       onChanged:(String user){
                         setState(() {

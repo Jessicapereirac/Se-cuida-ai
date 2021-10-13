@@ -1,10 +1,5 @@
-import 'package:Se_cuida_ai/telas%20profissional/principal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-
-import '../telas paciente/Home.dart';
-import '../login.dart';
 
 class Profissional
 {
@@ -68,14 +63,13 @@ class Profissional
 
       });
 
-      print("home profissional");
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(
-              builder: (context) => homeProfissional()));
+
     }).catchError((error) {
       print("erro:::"+error.toString());
       return error.toString();
     });
+
+    return "ok";
 
   }
 

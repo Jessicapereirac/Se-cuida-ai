@@ -20,7 +20,7 @@ class _homePacienteState extends State<homePaciente> {
 
   PageController _pageController = PageController(
     initialPage: 0,
-    keepPage: true
+    keepPage: false
   );
 
   void mudaPagina(int index){
@@ -53,7 +53,7 @@ class _homePacienteState extends State<homePaciente> {
   Color backgoundColor = Colors.white;
 
   List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.holiday_village_sharp), Text("  Início "), Colors.purple),
+    NavigationItem(Icon(Icons.home), Text("  Início "), Colors.purple),
     NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.amber),
     NavigationItem(Icon(Icons.favorite_border), Text("Favoritos"), Colors.pinkAccent),
   ];

@@ -20,7 +20,7 @@ class _homeProfissionalState extends State<homeProfissional> {
 
   PageController _pageController = PageController(
       initialPage: 0,
-      keepPage: true
+      keepPage: false
   );
 
   void mudaPagina(int index){
@@ -54,8 +54,8 @@ class _homeProfissionalState extends State<homeProfissional> {
 
   List<NavigationItem> itens = [
     NavigationItem(Icon(Icons.search), Text("Atualizar"), Colors.purple),
-    NavigationItem(Icon(Icons.holiday_village_sharp), Text("Perfil"), Colors.amber),
-    NavigationItem(Icon(Icons.account_circle_outlined), Text("Atualizar"), Colors.pinkAccent),
+    NavigationItem(Icon(Icons.home_filled), Text("  Perfil "), Colors.amber),
+    NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), Colors.pinkAccent),
   ];
   List<String> escolhas = ["Sair"];
 
