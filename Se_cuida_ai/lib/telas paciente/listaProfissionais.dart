@@ -1,10 +1,5 @@
-import 'package:Se_cuida_ai/model/paciente.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Home.dart';
-import 'model/profissional.dart';
 
 class listaProfissional extends StatefulWidget {
 

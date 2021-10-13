@@ -1,11 +1,11 @@
-import 'package:Se_cuida_ai/pesquisaProfissional.dart';
+import 'package:Se_cuida_ai/pesquisarProfissional.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'Home.dart';
+import '../login.dart';
 import 'listaFavoritos.dart';
-import 'login.dart';
 
 class homePaciente extends StatefulWidget {
 
@@ -53,7 +53,7 @@ class _homePacienteState extends State<homePaciente> {
   Color backgoundColor = Colors.white;
 
   List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.home), Text("  Início "), Colors.purple),
+    NavigationItem(Icon(Icons.holiday_village_sharp), Text("  Início "), Colors.purple),
     NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.amber),
     NavigationItem(Icon(Icons.favorite_border), Text("Favoritos"), Colors.pinkAccent),
   ];

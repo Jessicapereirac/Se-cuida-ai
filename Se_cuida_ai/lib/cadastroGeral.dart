@@ -1,5 +1,5 @@
-import 'package:Se_cuida_ai/cadastroProfissional.dart';
 import 'package:Se_cuida_ai/model/paciente.dart';
+import 'package:Se_cuida_ai/telas%20profissional/cadastroProfissional.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -352,7 +352,7 @@ class _cadastroGeralState extends State<cadastroGeral> {
                   RadioListTile(
                       title:Text("Paciente/Cuidador",
                           style: TextStyle(fontSize: 16)),
-                      value: "paciente" ,
+                      value: "0" ,
                       groupValue: _tipoUser ,
                       onChanged:(String user){
                         setState(() {
@@ -360,7 +360,7 @@ class _cadastroGeralState extends State<cadastroGeral> {
                         });
                       } ),
                   RadioListTile(
-                      title:Text("Profissional",
+                      title:Text("1",
                           style: TextStyle(fontSize: 16)),
                       value: "profissional" ,
                       groupValue: _tipoUser ,

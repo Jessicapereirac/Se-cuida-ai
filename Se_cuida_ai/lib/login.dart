@@ -1,10 +1,12 @@
 import 'package:Se_cuida_ai/cadastroGeral.dart';
-import 'package:Se_cuida_ai/principalPaciente.dart';
+import 'package:Se_cuida_ai/telas%20paciente/principal.dart';
+import 'package:Se_cuida_ai/telas%20profissional/principal.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'Home.dart';
+import 'telas paciente/Home.dart';
 
 class login extends StatefulWidget {
   const login({key}) : super(key: key);
@@ -51,12 +53,30 @@ class _loginState extends State<login> {
     auth.signInWithEmailAndPassword(
         email: email,
         password: senha
-    ).then((firebaseUser){
+    ).then((firebaseUser) async {
 
-      print("tela inicial");
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(
-              builder: (context) => homePaciente()));
+
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentSnapshot snapshot = await db.collection("usuarios")
+          .doc(firebaseUser.user.uid)
+          .get();
+
+      Map<String, dynamic> dados = snapshot.data();
+
+      if (dados["tipo"] == "0"){
+        print("home paciente");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (context) => homePaciente()));
+      }
+      else if (dados["tipo"] == "1"){
+        print("home profissional");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (context) => homeProfissional()));
+      }
+
+
 
     }).catchError((error){
       setState(() {

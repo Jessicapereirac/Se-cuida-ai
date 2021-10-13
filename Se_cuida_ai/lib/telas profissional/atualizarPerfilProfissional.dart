@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Se_cuida_ai/model/profissional.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,17 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'model/profissional.dart';
-import 'model/paciente.dart';
 
-class perfilUser extends StatefulWidget {
+class atualizarPerfil extends StatefulWidget {
 
   @override
-  _perfilUserState createState() => _perfilUserState();
+  _atualizarPerfilState createState() => _atualizarPerfilState();
 }
 
-class _perfilUserState extends State<perfilUser> {
+class _atualizarPerfilState extends State<atualizarPerfil> {
 
   TextEditingController _controllerNome = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();

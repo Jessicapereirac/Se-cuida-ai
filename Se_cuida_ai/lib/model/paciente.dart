@@ -1,10 +1,7 @@
+import 'package:Se_cuida_ai/telas%20paciente/principal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import '../Home.dart';
-import '../login.dart';
 
 class Paciente{
 
@@ -59,10 +56,10 @@ class Paciente{
 
       });
 
-      print("tela inicial paciente");
+      print("home paciente");
       Navigator.pushReplacement(context,
           MaterialPageRoute(
-              builder: (context) => telaInicial()));
+              builder: (context) => homePaciente()));
     }).catchError((error) {
       print("erro:::"+error.toString());
       return error.toString();
