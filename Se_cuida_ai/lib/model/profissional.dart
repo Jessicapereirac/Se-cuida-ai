@@ -16,8 +16,8 @@ class Profissional
   String _descricao;
   String _imgPerfil;
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Profissional();
 
@@ -43,7 +43,7 @@ class Profissional
 
   void atualizarDados (Profissional p, String _idUserLogado) async {
 
-    db.collection("usuarios")
+    _db.collection("usuarios")
         .doc(_idUserLogado)
         .update(p.toMap());
 
@@ -51,18 +51,17 @@ class Profissional
 
   String cadastrarUsuario(Profissional p, context) {
 
-    auth.createUserWithEmailAndPassword(
+    _auth.createUserWithEmailAndPassword(
         email: p.email,
         password: p.senha
     ).then((firebaseUser) {
-      db.collection("usuarios")
+      _db.collection("profissional")
           .doc(firebaseUser.user.uid)
           .set(p.toMap()).catchError((error){
             print("erro:::"+error.toString());
             return error.toString();
 
       });
-
 
     }).catchError((error) {
       print("erro:::"+error.toString());
@@ -71,6 +70,36 @@ class Profissional
 
     return "ok";
 
+  }
+
+  Future<List> recuperar_profissionais() async {
+
+    QuerySnapshot querySnapshot = await _db.collection("profissional").get();
+    List<Profissional> list = [];
+
+    for (DocumentSnapshot item in querySnapshot.docs){
+      var dados = item.data();
+
+      Profissional p = Profissional();
+
+      p.nome = dados["nome"];
+      p.sobrenome = dados["sobrenome"];
+      p.email = dados["email"];
+      p.senha = dados["senha"];
+      p.genero = dados["genero"];
+      p.numero_cel = dados["numero_cel"];
+      p.dt_nascimento = dados["dt_nascimento"];
+      p.tipo = dados["tipo"];
+      p.registro = dados["registro"];
+      p.especializacao = dados["especializacao"];
+      p.descricao = dados["descricao"];
+      p.imgPerfil = dados["imgPerfil"];
+
+      list.add(p);
+
+    }
+
+    return list;
   }
 
   String get descricao => _descricao;

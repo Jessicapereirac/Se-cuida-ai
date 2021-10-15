@@ -74,7 +74,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     print(_idUserLogado);
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentSnapshot snapshot = await db.collection("usuarios")
+    DocumentSnapshot snapshot = await db.collection("profissional")
         .doc(_idUserLogado)
         .get();
 

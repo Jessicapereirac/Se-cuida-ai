@@ -69,7 +69,7 @@ class _loginState extends State<login> {
             MaterialPageRoute(
                 builder: (context) => homePaciente()));
       }
-      else if (dados["tipo"] == "1"){
+      else{
         print("home profissional");
         Navigator.pushReplacement(context,
             MaterialPageRoute(
@@ -87,6 +87,7 @@ class _loginState extends State<login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Colors.black,
         title: Text("Se cuida aí"),
       ),

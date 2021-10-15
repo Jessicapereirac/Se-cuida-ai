@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import 'listaProfissionais.dart';
+
 class telaInicial extends StatefulWidget {
 
   @override
@@ -40,9 +42,9 @@ class _telaInicialState extends State<telaInicial> {
     onTap: (){
       print(profissoes[index].toString());
       String es = profissoes[index].toString();
-      /*Navigator.push(context,
+      Navigator.push(context,
           MaterialPageRoute(
-              builder: (context) => perfilUser()));*/
+              builder: (context) => listaProfissional(es)));
     },
     child: Container(
 
