@@ -125,7 +125,8 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                         profissao = newValue;
                       });
                     },
-                    items: <String>['Selecione uma opção:','Fisioterapeura', 'Enfermeiro', 'Médico', 'Dentista', 'Massagista', 'Técnico de enfermagem']
+                    items: <String>['Selecione uma opção:','Fisioterapeuta','Nutricionista', 'Enfermeira/o','Psicólogo','Esteticista', 'Médica/o', 'Dentista', 'Massagista', 'Técnica/o de enfermagem'
+                    ]
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

@@ -16,9 +16,10 @@ class _listaProfissionalState extends State<listaProfissional>  {
 
   Profissional _profissionalHelp = Profissional();
   List<Profissional> profissionais = [];
+  bool _favoritado = false ;
 
   _recuperar_profissionais() async {
-    List p = await  _profissionalHelp.recuperar_profissionais();
+    List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
     List<Profissional> temp = [];
 
     for (var i in p){
@@ -57,16 +58,15 @@ class _listaProfissionalState extends State<listaProfissional>  {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
           mainAxisSpacing: 10,
-
           crossAxisSpacing: 15,
-          childAspectRatio: 2.4),
+          childAspectRatio: 2.5),
       itemCount: profissionais.length,
       itemBuilder: (context, index){
         final item = profissionais[index];
-        return _cardprofissao(item.nome, index);
+        return _cardprofissional(item, index);
       });
 
-  Widget _cardprofissao(String prof,int index) => GestureDetector(
+  Widget _cardprofissional(Profissional p,int index) => GestureDetector(
 
     onTap: (){
       print("foi");
@@ -79,6 +79,7 @@ class _listaProfissionalState extends State<listaProfissional>  {
     },
     child: Container(
 
+
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
@@ -86,7 +87,7 @@ class _listaProfissionalState extends State<listaProfissional>  {
                 image:  AssetImage(prof.imgPerfil),
                 fit: BoxFit.fitWidth
             ),*/
-            color: HexColor('#FFFFFF'),
+            color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
               BoxShadow(
@@ -100,25 +101,75 @@ class _listaProfissionalState extends State<listaProfissional>  {
             ]
 
         ),
-        padding: EdgeInsets.only(top: 8),
+        padding: EdgeInsets.all(20),
 
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
           children: [
-            Center(
-              child: Text(
-                prof,
-                style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
-                    shadows: [Shadow(
-                        blurRadius: 9,
-                        color: Colors.grey[800],
-                        offset: Offset(
-                            0,3
-                        )
-                    )]),
-                textAlign: TextAlign.center,
+            CircleAvatar(
+              radius: 50,
+              backgroundColor: Colors.transparent,
+              backgroundImage: p.imgPerfil == null
+                  ? AssetImage("images/user_icon.png")
+                  : NetworkImage(p.imgPerfil),
+            ),
+            Flexible(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top:8, right:8, left:8),
+                    child: Text(
+                      p.nome,
+
+                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 25,fontWeight: FontWeight.bold ,
+                          shadows: [Shadow(
+                              blurRadius: 9,
+                              color: Colors.grey[800],
+                              offset: Offset(
+                                  0,3
+                              )
+                          )]),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top:8, bottom: 8, right:8, left:8),
+                    child: Text(
+                      p.descricao,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+
+
+                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                  )
+                ],
+
               ),
             ),
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  _favoritado = !_favoritado;
+                });
+              },
+                child: _favoritado
+                    ? IconTheme(
+                    data: IconThemeData(
+                        size: 27,
+                    ),
+                    child:  Icon(Icons.favorite))
+                    : IconTheme(
+                    data: IconThemeData(
+                      size: 27,
+                    ),
+                    child:  Icon(Icons.favorite_border)))
+
           ],
         )
     ),

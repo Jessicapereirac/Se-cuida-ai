@@ -72,7 +72,7 @@ class Profissional
 
   }
 
-  Future<List> recuperar_profissionais() async {
+  Future<List> recuperar_profissionais(String es) async {
 
     QuerySnapshot querySnapshot = await _db.collection("profissional").get();
     List<Profissional> list = [];
@@ -95,7 +95,14 @@ class Profissional
       p.descricao = dados["descricao"];
       p.imgPerfil = dados["imgPerfil"];
 
-      list.add(p);
+      if (es == "Todos"){list.add(p);}
+      else{
+        if (es == dados["especializacao"]){
+          list.add(p);
+        }
+      }
+
+
 
     }
 
