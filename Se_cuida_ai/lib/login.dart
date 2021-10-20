@@ -63,7 +63,7 @@ class _loginState extends State<login> {
 
       Map<String, dynamic> dados = snapshot.data();
 
-      if (dados["tipo"] == "0"){
+      if (dados != null && dados["tipo"] == "0"){
         print("home paciente");
         Navigator.pushReplacement(context,
             MaterialPageRoute(
@@ -76,6 +76,7 @@ class _loginState extends State<login> {
                 builder: (context) => homeProfissional()));
       }
     }).catchError((error){
+      print(error.toString());
       setState(() {
         msgErro = "Login ou senha invalidos, verfique e tente novamente";
       });

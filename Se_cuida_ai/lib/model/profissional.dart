@@ -43,7 +43,7 @@ class Profissional
 
   void atualizarDados (Profissional p, String _idUserLogado) async {
 
-    _db.collection("usuarios")
+    _db.collection("profissional")
         .doc(_idUserLogado)
         .update(p.toMap());
 
@@ -95,7 +95,7 @@ class Profissional
       p.descricao = dados["descricao"];
       p.imgPerfil = dados["imgPerfil"];
 
-      if (es == "Todos"){list.add(p);}
+      if (es == ''){list.add(p);}
       else{
         if (es == dados["especializacao"]){
           list.add(p);

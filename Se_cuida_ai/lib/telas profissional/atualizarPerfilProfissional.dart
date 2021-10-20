@@ -121,6 +121,8 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     });
 
     p.email = _controllerEmail.text;
+    print(p.imgPerfil);
+    print(_urlperfil);
     p.atualizarDados(p, _idUserLogado);
 
 
@@ -128,6 +130,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
 
   Future _recuperandoUrl(TaskSnapshot taskSnapshot) async {
     String url = await taskSnapshot.ref.getDownloadURL();
+    print(url);
     p.imgPerfil = url;
 
     setState(() {
