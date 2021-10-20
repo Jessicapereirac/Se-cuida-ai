@@ -92,6 +92,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     p.registro = dados["registro"];
     p.tipo = dados["tipo"];
     p.senha = dados["senha"];
+    p.uid = dados["uid"];
 
     _controllerNome.text = dados["nome"];
     _controllerEmail.text = dados["email"];

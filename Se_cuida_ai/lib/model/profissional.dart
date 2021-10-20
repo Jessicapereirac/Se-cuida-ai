@@ -15,6 +15,7 @@ class Profissional
   String _registro;
   String _descricao;
   String _imgPerfil;
+  String _uid;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -35,7 +36,8 @@ class Profissional
       "registro" : this.registro,
       "descricao" : this.descricao,
       "imgPerfil" : this.imgPerfil,
-      "senha" : this.senha
+      "senha" : this.senha,
+      "uid" : this.uid
 
     };
     return map;
@@ -43,9 +45,39 @@ class Profissional
 
   void atualizarDados (Profissional p, String _idUserLogado) async {
 
+    Map<String, dynamic> map ={
+
+      "nome" : this.nome,
+      "sobrenome" : this.sobrenome,
+      "email" : this.email,
+      "dt_nascimento" : this.dt_nascimento,
+      "numero_cel" : this.numero_cel,
+      "genero" : this.genero,
+      "tipo" : this.tipo,
+      "especializacao" : this.especializacao,
+      "registro" : this.registro,
+      "descricao" : this.descricao,
+      "imgPerfil" : this.imgPerfil,
+      "senha" : this.senha,
+      "uid" : this.uid
+
+    };
+
     _db.collection("profissional")
         .doc(_idUserLogado)
         .update(p.toMap());
+
+  }
+
+  Future<void> atualizar_favoritos(List profissional, String uid_paciente) async {
+
+    Map<String, dynamic> map ={
+      "profissionais" : profissional
+    };
+
+    _db.collection("favoritos")
+        .doc(uid_paciente)
+        .update(map);
 
   }
 
@@ -55,9 +87,10 @@ class Profissional
         email: p.email,
         password: p.senha
     ).then((firebaseUser) {
+      p.uid = firebaseUser.user.uid;
       _db.collection("profissional")
           .doc(firebaseUser.user.uid)
-          .set(p.toMap()).catchError((error){
+          .set(p.toMap() ).catchError((error){
             print("erro:::"+error.toString());
             return error.toString();
 
@@ -70,6 +103,25 @@ class Profissional
 
     return "ok";
 
+  }
+
+  Future<List> recuperar_favoritos() async {
+
+    QuerySnapshot querySnapshot = await _db.collection("favoritos").get();
+    List<String> list = [];
+
+    for (DocumentSnapshot item in querySnapshot.docs){
+      var dados = item.data();
+      List d = dados.values.toList();
+
+      for (var i in d){
+        for(var j in i){
+          list.add(j.toString());
+        }
+      }
+     }
+
+    return list;
   }
 
   Future<List> recuperar_profissionais(String es) async {
@@ -94,6 +146,7 @@ class Profissional
       p.especializacao = dados["especializacao"];
       p.descricao = dados["descricao"];
       p.imgPerfil = dados["imgPerfil"];
+      p.uid = dados["uid"];
 
       if (es == ''){list.add(p);}
       else{
@@ -101,9 +154,6 @@ class Profissional
           list.add(p);
         }
       }
-
-
-
     }
 
     return list;
@@ -143,6 +193,12 @@ class Profissional
 
   set genero(String value) {
     _genero = value;
+  }
+
+  String get uid => _uid;
+
+  set uid(String value) {
+    _uid = value;
   }
 
   String get numero_cel => _numero_cel;

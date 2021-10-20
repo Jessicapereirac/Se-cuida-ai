@@ -1,4 +1,5 @@
 import 'package:Se_cuida_ai/model/profissional.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -16,21 +17,44 @@ class _listaProfissionalState extends State<listaProfissional>  {
 
   Profissional _profissionalHelp = Profissional();
   List<Profissional> profissionais = [];
-  bool _favoritado = false ;
+  List<String> favoritos = [];
+  String _idUserLogado;
 
   _recuperar_profissionais() async {
+
     List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
+    List fav = await  _profissionalHelp.recuperar_favoritos();
+
     List<Profissional> temp = [];
+    List<String> temp2 = [];
 
     for (var i in p){
       temp.add(i);
     }
+    for (var j in fav){
+      temp2.add(j);
+    }
 
     setState(() {
       profissionais = temp;
+      favoritos =  temp2;
     });
 
-    temp = null;
+    temp2 = temp = null;
+
+  }
+
+  void _favorito(String uid_profissional) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User userLogado = await auth.currentUser;
+    _idUserLogado = userLogado.uid;
+
+    if(favoritos.contains(uid_profissional)){
+      favoritos.remove(uid_profissional);
+    }else{
+      favoritos.add(uid_profissional);
+    }
+    _profissionalHelp.atualizar_favoritos(favoritos, _idUserLogado);
   }
 
   @override
@@ -155,10 +179,10 @@ class _listaProfissionalState extends State<listaProfissional>  {
             GestureDetector(
               onTap: (){
                 setState(() {
-                  _favoritado = !_favoritado;
+                  _favorito(p.uid);
                 });
               },
-                child: _favoritado
+                child: favoritos.contains(p.uid)
                     ? IconTheme(
                     data: IconThemeData(
                         size: 27,
@@ -175,3 +199,4 @@ class _listaProfissionalState extends State<listaProfissional>  {
     ),
   );
 }
+
