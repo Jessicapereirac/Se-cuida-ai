@@ -124,6 +124,41 @@ class Profissional
     return list;
   }
 
+  Future<List> filtrar_profissionais(String es) async {
+
+    QuerySnapshot querySnapshot = await _db.collection("profissional").get();
+    List<Profissional> list = [];
+
+    for (DocumentSnapshot item in querySnapshot.docs){
+      var dados = item.data();
+
+      Profissional p = Profissional();
+
+      p.nome = dados["nome"];
+      p.sobrenome = dados["sobrenome"];
+      p.email = dados["email"];
+      p.senha = dados["senha"];
+      p.genero = dados["genero"];
+      p.numero_cel = dados["numero_cel"];
+      p.dt_nascimento = dados["dt_nascimento"];
+      p.tipo = dados["tipo"];
+      p.registro = dados["registro"];
+      p.especializacao = dados["especializacao"];
+      p.descricao = dados["descricao"];
+      p.imgPerfil = dados["imgPerfil"];
+      p.uid = dados["uid"];
+
+      if (es == ''){list.add(p);}
+      else{
+        if (es == dados["especializacao"]){
+          list.add(p);
+        }
+      }
+    }
+
+    return list;
+  }
+
   Future<List> recuperar_profissionais(String es) async {
 
     QuerySnapshot querySnapshot = await _db.collection("profissional").get();

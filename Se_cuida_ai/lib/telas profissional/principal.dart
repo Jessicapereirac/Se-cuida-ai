@@ -53,7 +53,7 @@ class _homeProfissionalState extends State<homeProfissional> {
   Color backgoundColor = Colors.white;
 
   List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.search), Text("Atualizar"), Colors.purple),
+    NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.purple),
     NavigationItem(Icon(Icons.home_filled), Text("  Perfil "), Colors.amber),
     NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), Colors.pinkAccent),
   ];
@@ -121,7 +121,6 @@ class _homeProfissionalState extends State<homeProfissional> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
           color: backgoundColor,
-
           boxShadow:[ BoxShadow(
               color: Colors.black12,
               blurRadius: 4

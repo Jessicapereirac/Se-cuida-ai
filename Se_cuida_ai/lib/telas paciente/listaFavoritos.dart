@@ -98,15 +98,9 @@ class _favoritosState extends State<favoritos> {
               */
     },
     child: Container(
-
-
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-          /*image:DecorationImage(
-                image:  AssetImage(prof.imgPerfil),
-                fit: BoxFit.fitWidth
-            ),*/
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
