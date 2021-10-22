@@ -45,24 +45,6 @@ class Profissional
 
   void atualizarDados (Profissional p, String _idUserLogado) async {
 
-    Map<String, dynamic> map ={
-
-      "nome" : this.nome,
-      "sobrenome" : this.sobrenome,
-      "email" : this.email,
-      "dt_nascimento" : this.dt_nascimento,
-      "numero_cel" : this.numero_cel,
-      "genero" : this.genero,
-      "tipo" : this.tipo,
-      "especializacao" : this.especializacao,
-      "registro" : this.registro,
-      "descricao" : this.descricao,
-      "imgPerfil" : this.imgPerfil,
-      "senha" : this.senha,
-      "uid" : this.uid
-
-    };
-
     _db.collection("profissional")
         .doc(_idUserLogado)
         .update(p.toMap());
@@ -124,9 +106,13 @@ class Profissional
     return list;
   }
 
-  Future<List> filtrar_profissionais(String es) async {
+  Future<List> filtrar_profissionais(String busca) async {
 
-    QuerySnapshot querySnapshot = await _db.collection("profissional").get();
+    QuerySnapshot querySnapshot = await _db.collection("profissional")
+        .where("nome", isGreaterThanOrEqualTo: busca)
+        .where("nome", isLessThanOrEqualTo: busca+"\uf8ff")
+        .get();
+
     List<Profissional> list = [];
 
     for (DocumentSnapshot item in querySnapshot.docs){
@@ -148,12 +134,7 @@ class Profissional
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
 
-      if (es == ''){list.add(p);}
-      else{
-        if (es == dados["especializacao"]){
-          list.add(p);
-        }
-      }
+      list.add(p);
     }
 
     return list;
@@ -161,7 +142,15 @@ class Profissional
 
   Future<List> recuperar_profissionais(String es) async {
 
-    QuerySnapshot querySnapshot = await _db.collection("profissional").get();
+    QuerySnapshot querySnapshot;
+
+    if (es == ''){
+      querySnapshot = await _db.collection("profissional").get();
+    }
+    else{
+      querySnapshot = await _db.collection("profissional").where("especializacao", isEqualTo: es).get();
+    }
+    
     List<Profissional> list = [];
 
     for (DocumentSnapshot item in querySnapshot.docs){
@@ -183,12 +172,7 @@ class Profissional
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
 
-      if (es == ''){list.add(p);}
-      else{
-        if (es == dados["especializacao"]){
-          list.add(p);
-        }
-      }
+      list.add(p);
     }
 
     return list;

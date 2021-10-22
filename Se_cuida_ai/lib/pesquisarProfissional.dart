@@ -19,28 +19,59 @@ class _pesquisarState extends State<pesquisar> {
 
   TextEditingController _pesquisaController = TextEditingController();
 
+  _recuperar_favoritos() async{
+
+    List fav = await  _profissionalHelp.recuperar_favoritos();
+    List<String> temp = [];
+
+    for (var i in fav){
+      temp.add(i);
+    }
+
+    setState(() {
+      favoritos =  temp;
+    });
+
+    temp = null;
+  }
+
   _recuperar_profissionais() async {
 
     List p = await  _profissionalHelp.recuperar_profissionais('');
-    List fav = await  _profissionalHelp.recuperar_favoritos();
-
     List<Profissional> temp = [];
-    List<String> temp2 = [];
 
-    for (var i in p){
-      temp.add(i);
-    }
-    for (var j in fav){
-      temp2.add(j);
+    for (var j in p){
+      temp.add(j);
     }
 
     setState(() {
       profissionais = temp;
-      favoritos =  temp2;
     });
 
-    temp2 = temp = null;
+    temp = null;
 
+  }
+
+  _recuperar_profissionais_filtrado(String busca) async {
+
+    List p = await  _profissionalHelp.filtrar_profissionais(busca);
+    List<Profissional> temp3 = [];
+
+    for (var i in p){
+      temp3.add(i);
+    }
+
+    setState(() {
+      profissionais =  temp3;
+    });
+
+    temp3 = null;
+
+    if(busca.isEmpty){
+      setState(() {
+        _recuperar_profissionais();
+      });
+    }
   }
 
   void _favorito(String uid_profissional) async {
@@ -61,6 +92,7 @@ class _pesquisarState extends State<pesquisar> {
     // TODO: implement initState
     super.initState();
     _recuperar_profissionais();
+    _recuperar_favoritos();
 
   }
 
@@ -77,7 +109,6 @@ class _pesquisarState extends State<pesquisar> {
                   fontSize:20,
                   height: 2
                 ),
-                autofocus: true,
                 controller: _pesquisaController,
                 decoration: InputDecoration(
                     labelText: "Procurar profissionais",
@@ -88,8 +119,7 @@ class _pesquisarState extends State<pesquisar> {
                     )
                 ),
                 onChanged: (text){
-                  print(text);
-                },
+                  _recuperar_profissionais_filtrado(text);},
               ),),
             Expanded(
                 child: Container(
@@ -136,17 +166,11 @@ class _pesquisarState extends State<pesquisar> {
                   blurRadius: 8,
                   spreadRadius: 1,
                   offset: Offset(
-                      0,3
-                  )
-              )
-            ]
-
+                      0,3))]
         ),
         padding: EdgeInsets.all(20),
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
             CircleAvatar(
               radius: 28,
@@ -154,7 +178,6 @@ class _pesquisarState extends State<pesquisar> {
               backgroundImage: p.imgPerfil == null
                   ? AssetImage("images/user_icon.png")
                   : NetworkImage(p.imgPerfil),
-
             ),
             Flexible(
               child: Column(
@@ -169,11 +192,8 @@ class _pesquisarState extends State<pesquisar> {
                       style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
                       ),
                       textAlign: TextAlign.center,
-                    ),
-
-                  )
+                    ))
                 ],
-
               ),
             ),
             GestureDetector(
