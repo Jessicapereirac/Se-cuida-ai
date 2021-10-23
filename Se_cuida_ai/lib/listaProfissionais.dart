@@ -1,4 +1,5 @@
 import 'package:Se_cuida_ai/model/profissional.dart';
+import 'package:Se_cuida_ai/telas%20paciente/perfilProfissional.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _listaProfissionalState extends State<listaProfissional>  {
   List<String> favoritos = [];
   String _idUserLogado;
 
-  _recuperar_profissionais() async {
+  void _recuperar_profissionais() async {
 
     List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
     List fav = await  _profissionalHelp.recuperar_favoritos();
@@ -62,7 +63,6 @@ class _listaProfissionalState extends State<listaProfissional>  {
     // TODO: implement initState
     super.initState();
     _recuperar_profissionais();
-
   }
 
   @override
@@ -93,24 +93,15 @@ class _listaProfissionalState extends State<listaProfissional>  {
   Widget _cardprofissional(Profissional p,int index) => GestureDetector(
 
     onTap: (){
-      print("foi");
-      /*print(profissoes[index].toString());
-      String es = profissoes[index].toString();
       Navigator.push(context,
           MaterialPageRoute(
-              builder: (context) => perfilprofissional(prof)));
-              */
+              builder: (context) => perfilProfissional(p)));
+
     },
     child: Container(
-
-
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-            /*image:DecorationImage(
-                image:  AssetImage(prof.imgPerfil),
-                fit: BoxFit.fitWidth
-            ),*/
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
@@ -123,13 +114,10 @@ class _listaProfissionalState extends State<listaProfissional>  {
                   )
               )
             ]
-
         ),
         padding: EdgeInsets.all(20),
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
             CircleAvatar(
               radius: 50,
@@ -146,7 +134,6 @@ class _listaProfissionalState extends State<listaProfissional>  {
                     padding: EdgeInsets.only(top:8, right:8, left:8),
                     child: Text(
                       p.nome,
-
                       style: TextStyle(color: HexColor('#4b0082'), fontSize: 25,fontWeight: FontWeight.bold ,
                           shadows: [Shadow(
                               blurRadius: 9,
@@ -164,35 +151,21 @@ class _listaProfissionalState extends State<listaProfissional>  {
                       p.descricao,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-
-
                       style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
                       ),
                       textAlign: TextAlign.center,
-                    ),
-
-                  )
+                    ))
                 ],
-
               ),
             ),
             GestureDetector(
               onTap: (){
                 setState(() {
                   _favorito(p.uid);
-                });
-              },
+                });},
                 child: favoritos.contains(p.uid)
-                    ? IconTheme(
-                    data: IconThemeData(
-                        size: 27,
-                    ),
-                    child:  Icon(Icons.favorite))
-                    : IconTheme(
-                    data: IconThemeData(
-                      size: 27,
-                    ),
-                    child:  Icon(Icons.favorite_border)))
+                    ? IconTheme( data: IconThemeData(size: 27), child:  Icon(Icons.favorite))
+                    : IconTheme(data: IconThemeData(size: 27), child:  Icon(Icons.favorite_border)))
 
           ],
         )

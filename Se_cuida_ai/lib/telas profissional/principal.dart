@@ -1,10 +1,13 @@
+import 'package:Se_cuida_ai/model/profissional.dart';
 import 'package:Se_cuida_ai/pesquisarProfissional.dart';
-import 'package:Se_cuida_ai/telas%20profissional/perfilProfissional.dart';
+import 'package:Se_cuida_ai/telas%20paciente/perfilProfissional.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../login.dart';
+import 'paginaProfissional.dart';
 import 'atualizarPerfilProfissional.dart';
 
 
@@ -17,6 +20,7 @@ class homeProfissional extends StatefulWidget {
 class _homeProfissionalState extends State<homeProfissional> {
 
   int itemselect = 0;
+  String _idUserLogado;
 
   PageController _pageController = PageController(
       initialPage: 0,
@@ -29,7 +33,16 @@ class _homeProfissionalState extends State<homeProfissional> {
     });
   }
 
+  void _recupera_profissional() async {
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User userLogado = await auth.currentUser;
+    _idUserLogado = userLogado.uid;
+
+  }
+
   Widget buildPageView(){
+
     return PageView(
       controller: _pageController,
       onPageChanged: (index){
@@ -37,7 +50,7 @@ class _homeProfissionalState extends State<homeProfissional> {
       },
       children: [
         pesquisar(),
-        perfilProfissional(),
+        pagProfissional(_idUserLogado),
         atualizarPerfil()
       ],
     );
@@ -144,6 +157,13 @@ class _homeProfissionalState extends State<homeProfissional> {
         }).toList(),
       ),
     );
+  }
+
+  @override
+  void initState() {
+
+    super.initState();
+    _recupera_profissional();
   }
 
   @override

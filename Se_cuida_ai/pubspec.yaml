@@ -73,6 +73,7 @@ flutter:
      - images/psicologia.jpg
      - images/tec_enfermagem.jpg
      - images/apps.png
+     - images/icon-whatsApp.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

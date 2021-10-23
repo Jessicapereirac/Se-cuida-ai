@@ -55,7 +55,6 @@ class _loginState extends State<login> {
         password: senha
     ).then((firebaseUser) async {
 
-
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentSnapshot snapshot = await db.collection("usuarios")
           .doc(firebaseUser.user.uid)
@@ -82,7 +81,6 @@ class _loginState extends State<login> {
       });
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

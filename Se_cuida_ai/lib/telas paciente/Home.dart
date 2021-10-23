@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import 'listaProfissionais.dart';
+import '../listaProfissionais.dart';
 
 class telaInicial extends StatefulWidget {
 
