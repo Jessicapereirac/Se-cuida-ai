@@ -33,11 +33,13 @@ class _homeProfissionalState extends State<homeProfissional> {
     });
   }
 
-  void _recupera_profissional() async {
+  Future<String> _recupera_profissional() async {
 
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
     _idUserLogado = userLogado.uid;
+
+    return userLogado.uid;
 
   }
 
@@ -183,11 +185,24 @@ class _homeProfissionalState extends State<homeProfissional> {
                       value: item,
                       child: Text(item) );
                 }).toList();
-
               })
         ],
       ),
-      body:buildPageView(),
+      body:Container(
+        child: FutureBuilder(
+            future:_recupera_profissional(),
+            builder: (context, snapshot){
+              if(snapshot.hasData){
+                return buildPageView();
+              }
+              else{
+                return Center(
+                  child:CircularProgressIndicator()
+                );
+              }
+
+            })
+      ),
       bottomNavigationBar: _criandoNavBar(
 
       ),
