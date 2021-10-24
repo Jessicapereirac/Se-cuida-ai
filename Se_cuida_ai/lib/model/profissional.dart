@@ -70,6 +70,18 @@ class Profissional
         password: p.senha
     ).then((firebaseUser) {
       p.uid = firebaseUser.user.uid;
+
+      Map<String, dynamic> map ={
+        "profissionais" : []
+      };
+
+      _db.collection("favoritos")
+          .doc(firebaseUser.user.uid)
+          .set(map).catchError((error){
+        print("erro:::"+error.toString());
+        return error.toString();
+      });
+
       _db.collection("profissional")
           .doc(firebaseUser.user.uid)
           .set(p.toMap() ).catchError((error){

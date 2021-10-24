@@ -44,7 +44,6 @@ class _homeProfissionalState extends State<homeProfissional> {
   }
 
   Widget buildPageView(){
-
     return PageView(
       controller: _pageController,
       onPageChanged: (index){
