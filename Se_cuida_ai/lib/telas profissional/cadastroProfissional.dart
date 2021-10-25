@@ -142,7 +142,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                   padding: EdgeInsets.only(bottom: 1),
                   child: TextField(
                     controller: _controllerRegistro,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
                     style: TextStyle(fontSize: 18),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),

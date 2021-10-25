@@ -38,7 +38,6 @@ class Paciente{
 
   Future<List> profissionais_favoritos(List favoritos) async {
 
-    print(favoritos);
     QuerySnapshot querySnapshot = await _db.collection("profissional").get();
     List<Profissional> list = [];
 
@@ -46,7 +45,6 @@ class Paciente{
       var dados = item.data();
 
       Profissional p = Profissional();
-
 
       p.nome = dados["nome"];
       p.sobrenome = dados["sobrenome"];

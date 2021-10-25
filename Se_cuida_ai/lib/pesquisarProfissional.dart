@@ -21,7 +21,11 @@ class _pesquisarState extends State<pesquisar> {
   TextEditingController _pesquisaController = TextEditingController();
 
   _recuperar_favoritos() async {
-    List fav = await _profissionalHelp.recuperar_favoritos();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User userLogado = await auth.currentUser;
+    _idUserLogado = userLogado.uid;
+
+    List fav = await _profissionalHelp.recuperar_favoritos(_idUserLogado);
     List<String> temp = [];
 
     for (var i in fav) {
@@ -35,7 +39,7 @@ class _pesquisarState extends State<pesquisar> {
     temp = null;
   }
 
-  void _recuperar_profissionais() async {
+  Future<List<Profissional>> _recuperar_profissionais() async {
     List p = await _profissionalHelp.recuperar_profissionais('');
     List<Profissional> temp = [];
 
@@ -48,6 +52,8 @@ class _pesquisarState extends State<pesquisar> {
     });
 
     temp = null;
+
+    return profissionais;
   }
 
   void _recuperar_profissionais_filtrado(String busca) async {
@@ -72,9 +78,6 @@ class _pesquisarState extends State<pesquisar> {
   }
 
   void _favorito(String uid_profissional) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
 
     if (favoritos.contains(uid_profissional)) {
       favoritos.remove(uid_profissional);
@@ -119,7 +122,18 @@ class _pesquisarState extends State<pesquisar> {
             ),),
           Expanded(
               child: Container(
-                child: _viewList(),
+                child: FutureBuilder(
+                    future:_recuperar_profissionais(),
+                    builder: (context, snapshot){
+                      if(profissionais.isNotEmpty){
+                        return _viewList();
+                      }
+                      else{
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    }
+
+                )
               ))
         ],
       ),

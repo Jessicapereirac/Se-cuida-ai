@@ -99,20 +99,26 @@ class Profissional
 
   }
 
-  Future<List> recuperar_favoritos() async {
+  Future<List> recuperar_favoritos(String uid_paciente) async {
 
     QuerySnapshot querySnapshot = await _db.collection("favoritos").get();
     List<String> list = [];
 
-    for (DocumentSnapshot item in querySnapshot.docs){
-      var dados = item.data();
-      List d = dados.values.toList();
 
-      for (var i in d){
-        for(var j in i){
-          list.add(j.toString());
+    for (DocumentSnapshot item in querySnapshot.docs){
+
+      if (item.id == uid_paciente){
+        var dados = item.data();
+        List d = dados.values.toList();
+
+        for (var i in d){
+          for(var j in i){
+
+            list.add(j.toString());
+          }
         }
       }
+
      }
 
     return list;

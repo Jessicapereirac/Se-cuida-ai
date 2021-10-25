@@ -21,11 +21,14 @@ class _listaProfissionalState extends State<listaProfissional>  {
   List<String> favoritos = [];
   String _idUserLogado;
 
-  void _recuperar_profissionais() async {
+  Future<List<Profissional>> _recuperar_profissionais() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User userLogado = await auth.currentUser;
+    _idUserLogado = userLogado.uid;
 
     List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
-    List fav = await  _profissionalHelp.recuperar_favoritos();
-
+    List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
+    print(p);
     List<Profissional> temp = [];
     List<String> temp2 = [];
 
@@ -43,12 +46,11 @@ class _listaProfissionalState extends State<listaProfissional>  {
 
     temp2 = temp = null;
 
+    return profissionais;
+
   }
 
-  void _favorito(String uid_profissional) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
+  void _favorito(String uid_profissional) {
 
     if(favoritos.contains(uid_profissional)){
       favoritos.remove(uid_profissional);
@@ -74,7 +76,18 @@ class _listaProfissionalState extends State<listaProfissional>  {
           title: Text("Se cuida aí"),
         ),
         backgroundColor: Colors.grey[100],
-        body: _viewList()
+        body: FutureBuilder(
+            future:_recuperar_profissionais(),
+            builder: (context, snapshot){
+              if(profissionais.isNotEmpty){
+                return _viewList();
+              }
+              else{
+                return Center(child: CircularProgressIndicator());
+              }
+            }
+
+        )
     );
   }
   Widget _viewList() => GridView.builder(

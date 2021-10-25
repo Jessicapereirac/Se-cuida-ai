@@ -21,6 +21,14 @@ class _homeProfissionalState extends State<homeProfissional> {
 
   int itemselect = 0;
   String _idUserLogado;
+  Color backgoundColor = Colors.white;
+
+  List<String> escolhas = ["Sair"];
+  List<NavigationItem> itens = [
+    NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.purple),
+    NavigationItem(Icon(Icons.home_filled), Text("  Perfil "), Colors.amber),
+    NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), Colors.pinkAccent),
+  ];
 
   PageController _pageController = PageController(
       initialPage: 0,
@@ -50,8 +58,8 @@ class _homeProfissionalState extends State<homeProfissional> {
         mudaPagina(index);
       },
       children: [
-        pesquisar(),
         pagProfissional(_idUserLogado),
+        pesquisar(),
         atualizarPerfil()
       ],
     );
@@ -63,15 +71,6 @@ class _homeProfissionalState extends State<homeProfissional> {
       _pageController.animateToPage(index, duration: Duration(milliseconds: 270), curve: Curves.ease);
     });
   }
-
-  Color backgoundColor = Colors.white;
-
-  List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.purple),
-    NavigationItem(Icon(Icons.home_filled), Text("  Perfil "), Colors.amber),
-    NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), Colors.pinkAccent),
-  ];
-  List<String> escolhas = ["Sair"];
 
   void _escolhaUsuario(String item){
 
@@ -162,7 +161,6 @@ class _homeProfissionalState extends State<homeProfissional> {
 
   @override
   void initState() {
-
     super.initState();
     _recupera_profissional();
   }
@@ -196,7 +194,7 @@ class _homeProfissionalState extends State<homeProfissional> {
               }
               else{
                 return Center(
-                  child:CircularProgressIndicator()
+                  child:Center(child: CircularProgressIndicator())
                 );
               }
 

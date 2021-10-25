@@ -1,5 +1,6 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
+import 'package:Se_cuida_ai/telas%20paciente/perfilProfissional.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,11 @@ class _favoritosState extends State<favoritos> {
   String _idUserLogado;
 
   _recuperar_profissionais() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User userLogado = await auth.currentUser;
+    _idUserLogado = userLogado.uid;
 
-    List fav = await  _profissionalHelp.recuperar_favoritos();
+    List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
     List p = await  _pacienteHelp.profissionais_favoritos(fav);
 
     List<Profissional> temp = [];
@@ -41,13 +45,11 @@ class _favoritosState extends State<favoritos> {
     });
 
     temp2 = temp = null;
+    return profissionais;
 
   }
 
   void _favorito(String uid_profissional) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
 
     if(favoritos.contains(uid_profissional)){
       favoritos.remove(uid_profissional);
@@ -70,7 +72,18 @@ class _favoritosState extends State<favoritos> {
     return Scaffold(
 
         backgroundColor: Colors.grey[100],
-        body: _viewList()
+        body: FutureBuilder(
+            future:_recuperar_profissionais(),
+            builder: (context, snapshot){
+              if(favoritos.isNotEmpty){
+                return _viewList();
+              }
+              else{
+                return Center(child: Text("Você não possui favoritos"));
+              }
+            }
+
+        )
     );
   }
   Widget _viewList() => GridView.builder(
@@ -89,13 +102,9 @@ class _favoritosState extends State<favoritos> {
   Widget _cardprofissional(Profissional p,int index) => GestureDetector(
 
     onTap: (){
-      print("foi");
-      /*print(profissoes[index].toString());
-      String es = profissoes[index].toString();
       Navigator.push(context,
           MaterialPageRoute(
-              builder: (context) => perfilprofissional(prof)));
-              */
+              builder: (context) => perfilProfissional(p)));
     },
     child: Container(
         height: double.infinity,
@@ -136,7 +145,6 @@ class _favoritosState extends State<favoritos> {
                     padding: EdgeInsets.only(top:8, right:8, left:8),
                     child: Text(
                       p.nome,
-
                       style: TextStyle(color: HexColor('#4b0082'), fontSize: 25,fontWeight: FontWeight.bold ,
                           shadows: [Shadow(
                               blurRadius: 9,
@@ -154,8 +162,6 @@ class _favoritosState extends State<favoritos> {
                       p.descricao,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-
-
                       style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
                       ),
                       textAlign: TextAlign.center,
