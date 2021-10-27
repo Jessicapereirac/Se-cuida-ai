@@ -1,12 +1,10 @@
-import 'package:Se_cuida_ai/cadastroGeral.dart';
-import 'package:Se_cuida_ai/telas%20paciente/principal.dart';
-import 'package:Se_cuida_ai/telas%20profissional/principal.dart';
+import 'package:Se_cuida_ai/geral_cadastro.dart';
+import 'package:Se_cuida_ai/telas%20paciente/paciente_principal.dart';
+import 'package:Se_cuida_ai/telas%20profissional/profissional_principal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'telas paciente/Home.dart';
 
 class login extends StatefulWidget {
   const login({key}) : super(key: key);

@@ -1,33 +1,33 @@
-import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/telas%20paciente/perfilProfissional.dart';
+import 'package:Se_cuida_ai/telas%20paciente/paciente_perfildoFuncionario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class favoritos extends StatefulWidget {
+class listaProfissional extends StatefulWidget {
 
+  String especializacao;
+  listaProfissional(this.especializacao);
 
   @override
-  _favoritosState createState() => _favoritosState();
+  _listaProfissionalState createState() => _listaProfissionalState();
 }
 
-class _favoritosState extends State<favoritos> {
+class _listaProfissionalState extends State<listaProfissional>  {
 
   Profissional _profissionalHelp = Profissional();
-  Paciente _pacienteHelp = Paciente();
   List<Profissional> profissionais = [];
   List<String> favoritos = [];
   String _idUserLogado;
 
-  _recuperar_profissionais() async {
+  Future<List<Profissional>> _recuperar_profissionais() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
     _idUserLogado = userLogado.uid;
 
+    List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
     List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
-    List p = await  _pacienteHelp.profissionais_favoritos(fav);
 
     List<Profissional> temp = [];
     List<String> temp2 = [];
@@ -45,11 +45,12 @@ class _favoritosState extends State<favoritos> {
     });
 
     temp2 = temp = null;
+
     return profissionais;
 
   }
 
-  void _favorito(String uid_profissional) async {
+  void _favorito(String uid_profissional) {
 
     if(favoritos.contains(uid_profissional)){
       favoritos.remove(uid_profissional);
@@ -64,22 +65,25 @@ class _favoritosState extends State<favoritos> {
     // TODO: implement initState
     super.initState();
     _recuperar_profissionais();
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+        appBar:AppBar(
+          elevation: 0,
+          backgroundColor: Colors.black,
+          title: Text("Se cuida aí"),
+        ),
         backgroundColor: Colors.grey[100],
         body: FutureBuilder(
             future:_recuperar_profissionais(),
             builder: (context, snapshot){
-              if(favoritos.isNotEmpty){
+              if(profissionais.isNotEmpty){
                 return _viewList();
               }
               else{
-                return Center(child: Text("Você não possui favoritos"));
+                return Center(child: CircularProgressIndicator());
               }
             }
 
@@ -105,6 +109,7 @@ class _favoritosState extends State<favoritos> {
       Navigator.push(context,
           MaterialPageRoute(
               builder: (context) => perfilProfissional(p)));
+
     },
     child: Container(
         height: double.infinity,
@@ -122,13 +127,10 @@ class _favoritosState extends State<favoritos> {
                   )
               )
             ]
-
         ),
         padding: EdgeInsets.all(20),
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
             CircleAvatar(
               radius: 50,
@@ -159,39 +161,28 @@ class _favoritosState extends State<favoritos> {
                   Padding(
                     padding: EdgeInsets.only(top:8, bottom: 8, right:8, left:8),
                     child: Text(
-                      p.descricao,
+                      p.especializacao,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
                       ),
                       textAlign: TextAlign.center,
-                    ),
-
-                  )
+                    ))
                 ],
-
               ),
             ),
             GestureDetector(
-                onTap: (){
-                  setState(() {
-                    _favorito(p.uid);
-                  });
-                },
+              onTap: (){
+                setState(() {
+                  _favorito(p.uid);
+                });},
                 child: favoritos.contains(p.uid)
-                    ? IconTheme(
-                    data: IconThemeData(
-                      size: 27,
-                    ),
-                    child:  Icon(Icons.favorite))
-                    : IconTheme(
-                    data: IconThemeData(
-                      size: 27,
-                    ),
-                    child:  Icon(Icons.favorite_border)))
+                    ? IconTheme( data: IconThemeData(size: 27), child:  Icon(Icons.favorite))
+                    : IconTheme(data: IconThemeData(size: 27), child:  Icon(Icons.favorite_border)))
 
           ],
         )
     ),
   );
 }
+

@@ -1,8 +1,6 @@
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/telas%20paciente/principal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class Paciente{
 
@@ -59,7 +57,6 @@ class Paciente{
       p.descricao = dados["descricao"];
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
-      print(p.uid);
 
       if (favoritos.contains(p.uid)){list.add(p);}
     }

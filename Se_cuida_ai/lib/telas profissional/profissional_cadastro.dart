@@ -1,6 +1,6 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/telas%20profissional/principal.dart';
+import 'package:Se_cuida_ai/telas%20profissional/profissional_principal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

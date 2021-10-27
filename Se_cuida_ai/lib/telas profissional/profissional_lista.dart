@@ -1,5 +1,5 @@
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/telas%20paciente/perfilProfissional.dart';
+import 'package:Se_cuida_ai/telas%20paciente/paciente_perfildoFuncionario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,46 +18,28 @@ class _listaProfissionalState extends State<listaProfissional>  {
 
   Profissional _profissionalHelp = Profissional();
   List<Profissional> profissionais = [];
-  List<String> favoritos = [];
-  String _idUserLogado;
 
   Future<List<Profissional>> _recuperar_profissionais() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
+    String _idUserLogado = userLogado.uid;
 
     List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
-    List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
-    print(p);
+
     List<Profissional> temp = [];
-    List<String> temp2 = [];
 
     for (var i in p){
       temp.add(i);
     }
-    for (var j in fav){
-      temp2.add(j);
-    }
 
     setState(() {
       profissionais = temp;
-      favoritos =  temp2;
     });
 
-    temp2 = temp = null;
+    temp = null;
 
     return profissionais;
 
-  }
-
-  void _favorito(String uid_profissional) {
-
-    if(favoritos.contains(uid_profissional)){
-      favoritos.remove(uid_profissional);
-    }else{
-      favoritos.add(uid_profissional);
-    }
-    _profissionalHelp.atualizar_favoritos(favoritos, _idUserLogado);
   }
 
   @override
@@ -159,27 +141,18 @@ class _listaProfissionalState extends State<listaProfissional>  {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top:8, bottom: 8, right:8, left:8),
-                    child: Text(
-                      p.descricao,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
-                      ),
-                      textAlign: TextAlign.center,
-                    ))
+                      padding: EdgeInsets.only(top:8, bottom: 8, right:8, left:8),
+                      child: Text(
+                        p.descricao,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
+                        ),
+                        textAlign: TextAlign.center,
+                      ))
                 ],
               ),
-            ),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  _favorito(p.uid);
-                });},
-                child: favoritos.contains(p.uid)
-                    ? IconTheme( data: IconThemeData(size: 27), child:  Icon(Icons.favorite))
-                    : IconTheme(data: IconThemeData(size: 27), child:  Icon(Icons.favorite_border)))
-
+            )
           ],
         )
     ),

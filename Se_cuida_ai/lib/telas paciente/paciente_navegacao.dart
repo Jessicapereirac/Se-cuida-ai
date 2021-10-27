@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import '../listaProfissionais.dart';
+import 'paciente_listaProfissionais.dart';
 
 class telaInicial extends StatefulWidget {
 
@@ -40,7 +40,6 @@ class _telaInicialState extends State<telaInicial> {
   Widget _cardprofissao(String prof,int index) => GestureDetector(
 
     onTap: (){
-      print(profissoes[index].toString());
       String es = profissoes[index].toString();
       Navigator.push(context,
           MaterialPageRoute(

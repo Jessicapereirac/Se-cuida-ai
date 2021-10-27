@@ -1,54 +1,32 @@
-import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/pesquisarProfissional.dart';
-import 'package:Se_cuida_ai/telas%20paciente/perfilProfissional.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../login.dart';
-import 'paginaProfissional.dart';
-import 'atualizarPerfilProfissional.dart';
+import 'paciente_navegacao.dart';
+import '../geral_login.dart';
+import 'paciente_favoritos.dart';
+import 'paciente_pesquisa.dart';
 
-
-class homeProfissional extends StatefulWidget {
+class homePaciente extends StatefulWidget {
 
   @override
-  _homeProfissionalState createState() => _homeProfissionalState();
+  _homePacienteState createState() => _homePacienteState();
+
 }
 
-class _homeProfissionalState extends State<homeProfissional> {
+class _homePacienteState extends State<homePaciente> {
 
   int itemselect = 0;
-  String _idUserLogado;
-  Color backgoundColor = Colors.white;
-
-  List<String> escolhas = ["Sair"];
-  List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.purple),
-    NavigationItem(Icon(Icons.home_filled), Text("  Perfil "), Colors.amber),
-    NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), Colors.pinkAccent),
-  ];
 
   PageController _pageController = PageController(
-      initialPage: 0,
-      keepPage: false
+    initialPage: 0,
+    keepPage: true
   );
 
   void mudaPagina(int index){
     setState(() {
       itemselect = index;
     });
-  }
-
-  Future<String> _recupera_profissional() async {
-
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
-
-    return userLogado.uid;
-
   }
 
   Widget buildPageView(){
@@ -58,9 +36,9 @@ class _homeProfissionalState extends State<homeProfissional> {
         mudaPagina(index);
       },
       children: [
-        pagProfissional(_idUserLogado),
-        pesquisar(),
-        atualizarPerfil()
+        telaInicial(),
+        paciente_pesquisar(),
+        favoritos()
       ],
     );
   }
@@ -71,6 +49,15 @@ class _homeProfissionalState extends State<homeProfissional> {
       _pageController.animateToPage(index, duration: Duration(milliseconds: 270), curve: Curves.ease);
     });
   }
+
+  Color backgoundColor = Colors.white;
+
+  List<NavigationItem> itens = [
+    NavigationItem(Icon(Icons.home), Text("  Início "), Colors.purple),
+    NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.amber),
+    NavigationItem(Icon(Icons.favorite_border), Text("Favoritos"), Colors.pinkAccent),
+  ];
+  List<String> escolhas = ["Sair"];
 
   void _escolhaUsuario(String item){
 
@@ -115,10 +102,10 @@ class _homeProfissionalState extends State<homeProfissional> {
                   child:  item.icon),
               Padding(padding: EdgeInsets.only(left: 8),
                 child: selecionado ? DefaultTextStyle.merge(
-                    textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
                     style: TextStyle(
                         color: backgoundColor,
-                        fontSize: 18
+                      fontSize: 18
                     ),
                     child: item.title) : Container(),)
             ],
@@ -132,8 +119,9 @@ class _homeProfissionalState extends State<homeProfissional> {
     return Container(
       padding: EdgeInsets.only(left: 15,top: 4, bottom: 4,right: 15),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
           color: backgoundColor,
+
           boxShadow:[ BoxShadow(
               color: Colors.black12,
               blurRadius: 4
@@ -160,12 +148,6 @@ class _homeProfissionalState extends State<homeProfissional> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _recupera_profissional();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -182,24 +164,11 @@ class _homeProfissionalState extends State<homeProfissional> {
                       value: item,
                       child: Text(item) );
                 }).toList();
+
               })
         ],
       ),
-      body:Container(
-        child: FutureBuilder(
-            future:_recupera_profissional(),
-            builder: (context, snapshot){
-              if(snapshot.hasData){
-                return buildPageView();
-              }
-              else{
-                return Center(
-                  child:Center(child: CircularProgressIndicator())
-                );
-              }
-
-            })
-      ),
+      body:buildPageView(),
       bottomNavigationBar: _criandoNavBar(
 
       ),
@@ -207,6 +176,7 @@ class _homeProfissionalState extends State<homeProfissional> {
     );
   }
 }
+
 
 class NavigationItem {
   final Icon icon;
