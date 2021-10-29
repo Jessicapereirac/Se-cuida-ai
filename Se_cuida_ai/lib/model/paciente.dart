@@ -57,6 +57,7 @@ class Paciente{
       p.descricao = dados["descricao"];
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
+      p.endereco = dados["endereco"];
 
       if (favoritos.contains(p.uid)){list.add(p);}
     }

@@ -16,6 +16,7 @@ class Profissional
   String _descricao;
   String _imgPerfil;
   String _uid;
+  String _endereco;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -37,7 +38,8 @@ class Profissional
       "descricao" : this.descricao,
       "imgPerfil" : this.imgPerfil,
       "senha" : this.senha,
-      "uid" : this.uid
+      "uid" : this.uid,
+      "endereco" : this.endereco
 
     };
     return map;
@@ -140,6 +142,7 @@ class Profissional
       p.descricao = dados["descricao"];
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
+      p.endereco = dados["endereco"];
 
       list.add(p);
     }
@@ -178,6 +181,7 @@ class Profissional
       p.descricao = dados["descricao"];
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
+      p.endereco = dados["endereco"];
 
       list.add(p);
     }
@@ -195,6 +199,12 @@ class Profissional
 
   set registro(String value) {
     _registro = value;
+  }
+
+  String get endereco => _endereco;
+
+  set endereco(String value) {
+    _endereco = value;
   }
 
   String get imgPerfil => _imgPerfil;

@@ -32,6 +32,8 @@ dependencies:
   firebase_auth: ^1.4.1 #Autenticação flutter doctor --android-licensesde usuário
   image_picker: ^0.6.0+10
   hexcolor: ^2.0.5
+  share: ^2.0.4
+  url_launcher: ^6.0.12
 
 
 
@@ -74,6 +76,12 @@ flutter:
      - images/tec_enfermagem.jpg
      - images/apps.png
      - images/icon-whatsApp.png
+     - images/call.png
+     - images/share.png
+     - images/like.png
+     - images/comente.png
+     - images/map.png
+     - images/mappin.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

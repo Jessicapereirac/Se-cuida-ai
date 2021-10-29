@@ -1,6 +1,11 @@
+
+import 'dart:io' show Platform;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/profissional.dart';
 
@@ -13,7 +18,7 @@ class perfilProfissional extends StatefulWidget {
   _perfilProfissionalState createState() => _perfilProfissionalState();
 }
 
-class _perfilProfissionalState extends State<perfilProfissional> {
+class _perfilProfissionalState extends State<perfilProfissional>{
 
   Profissional profissional = Profissional();
 
@@ -31,146 +36,330 @@ class _perfilProfissionalState extends State<perfilProfissional> {
     profissional.especializacao = widget.p.especializacao;
     profissional.descricao = widget.p.descricao;
     profissional.imgPerfil = widget.p.imgPerfil;
+    profissional.endereco = widget.p.endereco;
 
     return 'ok';
 
+  }
+
+  Profissional _profissionalHelp = Profissional();
+  List<String> favoritos = [];
+  String _idUserLogado;
+
+  Future<List<Profissional>> _recuperar_favoritos() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User userLogado = await auth.currentUser;
+    _idUserLogado = userLogado.uid;
+
+    List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
+
+    List<String> temp2 = [];
+
+    for (var j in fav){
+      temp2.add(j);
+    }
+
+    setState(() {
+      favoritos =  temp2;
+    });
+
+    temp2 = null;
+
+    return fav;
+
+  }
+
+  void _favorito(String uid_profissional) {
+
+    if(favoritos.contains(uid_profissional)){
+      favoritos.remove(uid_profissional);
+    }else{
+      favoritos.add(uid_profissional);
+    }
+    _profissionalHelp.atualizar_favoritos(favoritos, _idUserLogado);
+  }
+
+  _ligacao() async {
+    String url = "tel:"+profissional.numero_cel;
+    print(url);
+    if(await canLaunch(url)){
+      await launch(url);
+    }else{
+      print('erro');
+      return "erro";
+    }
+
+  }
+
+  _whatsapp() async{
+
+    String url = "+"+profissional.numero_cel;
+    if(Platform.isIOS){
+      var ios = "https://wa.me/$url?text=${Uri.parse("Olá, vim do Se cuida aí")}";
+      if(await canLaunch(ios)){
+        await launch(ios);
+
+      }else{print("erro");}} else{
+      var android = "whatsapp://send?phone="+url+"&text=Olá, vim do Se cuida aí";
+      if(await canLaunch(android)){
+        await launch(android);
+      }else{print("erro");}
+    }
+  }
+
+  _compartilhar(){
+    Share.share("Olha esse profissional que eu entrei no 'Se cuida aí '");
   }
 
   @override
   void initState() {
     super.initState();
     _recuperarDadosUser();
+    _recuperar_favoritos();
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:AppBar(
-          elevation: 0,
-          backgroundColor: Colors.black,
-          title: Text("Se cuida aí"),
+      appBar: AppBar(
+      elevation: 0,
+      backgroundColor: Colors.black,
+      title: Text("Se cuida aí"),
+    ),
+      body: SingleChildScrollView(
+        child: Container(
+
+          padding: EdgeInsets.fromLTRB(15, 5, 8, 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment : MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Image.network(profissional.imgPerfil, height: 190, width:160,fit: BoxFit.fill),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left:10),
+                    height: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          profissional.nome,
+                          style: TextStyle(fontSize: 32),
+                        ),
+                        Text(
+                          profissional.especializacao,
+                          style: TextStyle(fontSize: 19, color: Colors.grey),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            GestureDetector(
+                              child:IconTile(
+                                backColor: Color(0xffFFECDD),
+                                imgAssetPath: "images/share.png",
+                              ),
+                              onTap: (){_compartilhar();},
+                            ),
+                            GestureDetector(
+                              child:IconTile(
+                                backColor: Color(0xffFEF2F0),
+                                imgAssetPath: "images/call.png",
+                              ),
+                              onTap: (){_ligacao();}
+                            ),
+                            GestureDetector(
+                              child:IconTile(
+                                backColor: Color(0xffEBECEF),
+                                imgAssetPath: "images/icon-whatsApp.png",
+                              ),
+                              onTap: (){_whatsapp();},
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 22,
+              ),
+              Text(
+                "Sobre",
+                style: TextStyle(fontSize: 22),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                profissional.descricao,
+                  style: TextStyle(color: Colors.black54, fontSize: 16),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Image.asset("images/mappin.png"),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Endereço",
+                                style: TextStyle(
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Container(
+                                  width: MediaQuery.of(context).size.width - 268,
+                                  child: Text(
+                                    profissional.endereco,
+                                    style: TextStyle(color: Colors.black38),
+                                  ))
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                    ],
+                  ),
+                  Image.asset(
+                    "images/map.png",
+                    width: 180,
+                  )
+                ],
+              ),
+
+
+              Text(
+                "Acões",
+                style: TextStyle(
+                    color: Color(0xff242424),
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                height: 22,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 24,horizontal: 16),
+                      decoration: BoxDecoration(
+                          color: Color(0xffFBB97C),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(child:Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  color: Color(0xffFCCA9B),
+                                  borderRadius: BorderRadius.circular(16)
+                              ),
+                              child: Image.asset("images/comente.png"))),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          GestureDetector(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width/2 - 130,
+                              child: Text(
+                                "Comente aqui",
+                                style: TextStyle(color: Colors.white,
+                                    fontSize: 17),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16,),
+
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 22,horizontal: 16),
+                      decoration: BoxDecoration(
+                          color: Color(0xffA5A5A5),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  color: Color(0xffBBBBBB),
+                                  borderRadius: BorderRadius.circular(16)
+                              ),
+                              child: Image.asset("images/like.png")),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  _favorito(profissional.uid);
+                                });},
+                              child: favoritos.contains(profissional.uid)
+                                  ? Container(width: MediaQuery.of(context).size.width/2 - 130,child: Text("Salvo",style: TextStyle(color: Colors.white,fontSize: 17),),)
+                                  : Container(width: MediaQuery.of(context).size.width/2 - 130,child: Text("Salvar",style: TextStyle(color: Colors.white,fontSize: 17),),)
+
+                          )],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
-        backgroundColor: HexColor('#f6d7c0'),
-        body: Container(
-            child: FutureBuilder(
-                future: _recuperarDadosUser(),
-                builder: (context, snapshot){
-                  if(snapshot.hasData){
-
-                    return SingleChildScrollView(
-                        child:Padding(padding: EdgeInsets.only(top:20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                    height: 220,
-                                    width: 220,
-                                    child: Stack(
-                                        clipBehavior: Clip.none,
-                                        fit: StackFit.expand,
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundColor: Color(0x9FF5FAF9),
-                                            radius: 165,
-                                            backgroundImage: profissional.imgPerfil == null
-                                                ? AssetImage("images/user_icon.png")
-                                                : NetworkImage(profissional.imgPerfil),
-                                          )])),
-                                Padding(
-                                    padding: EdgeInsets.only(top:18, bottom: 8, right:8, left:8),
-                                    child: Text(
-                                      ''+profissional.nome +' '+ ''+profissional.sobrenome+', '+ profissional.especializacao,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.black, fontSize: 23,fontWeight: FontWeight.bold ,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                Padding(
-                                    padding: EdgeInsets.only(bottom: 23),
-                                    child: Text(
-                                      "Registro profissional: "+ profissional.registro,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.black.withOpacity(0.8), fontSize: 18,
-                                          fontStyle: FontStyle.italic
-
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                Padding(
-                                    padding: EdgeInsets.only(top:8, left: 20, right: 20, bottom: 35),
-                                    child: Text(
-                                      ""+ profissional.descricao,
-                                      maxLines: 5,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.w600 ,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                Padding(
-                                    padding: EdgeInsets.only(bottom: 15),
-                                    child: GestureDetector(
-                                      child:Text(
-                                        "Ver comentários",
-                                        style: TextStyle(color: Colors.blueAccent, fontSize: 20,
-                                            decoration: TextDecoration.underline),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      onTap: (){
-                                        print('foi');
-                                      },
-                                    ) ),
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top:10,left:50.0),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-
-                                      children: [
-                                        RawMaterialButton(
-                                          elevation: 3.0,
-                                          fillColor: Color(0xFFF5F6F9),
-                                          child: Icon(Icons.call, color: Colors.black,size: 40),
-                                          padding: EdgeInsets.all(25.0),
-                                          shape: CircleBorder(),
-                                          onPressed: () {print('tel');},
-                                        ),
-                                        RawMaterialButton(
-                                          elevation: 2.0,
-                                          fillColor: Color(0xFFF5F6F9),
-                                          child: Tab(icon: Image.asset('images/icon-whatsApp.png', width: 70, height: 70),),
-                                          padding: EdgeInsets.all(25.0),
-                                          shape: CircleBorder(),
-                                          onPressed: () {print('wpp');},
-                                        ),
-                                        RawMaterialButton(
-                                          elevation: 2.0,
-                                          fillColor: Color(0xFFF5F6F9),
-                                          child: Icon(CupertinoIcons.share, color: Colors.black,size: 40,),
-                                          padding: EdgeInsets.all(25.0),
-                                          shape: CircleBorder(),
-                                          onPressed: () {print('compartilhar');},
-                                        )
-
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ))
-                    );
-                  }
-                  else{
-                    return Center(
-                        child:CircularProgressIndicator()
-                    );
-                  }
-
-                }
-
-            )
-        )
+      ),
     );
   }
 }
+
+class IconTile extends StatelessWidget {
+  final String imgAssetPath;
+  final Color backColor;
+
+  IconTile({this.imgAssetPath, this.backColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(right: 16),
+      child: Container(
+        height: 45,
+        width: 45,
+        decoration: BoxDecoration(
+            color: backColor, borderRadius: BorderRadius.circular(15)),
+        child: Image.asset(
+          imgAssetPath,
+          width: 20,
+        ),
+      ),
+    );
+  }
+}
+
