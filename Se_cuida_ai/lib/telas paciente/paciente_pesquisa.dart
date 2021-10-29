@@ -37,8 +37,11 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
     return temp;
   }
 
-  void _recuperar_profissionais_filtrado(String busca) async {
+  Future<List> _recuperar_profissionais_filtrado(String busca) async {
+    profissionais = [];
     List p = await _profissionalHelp.filtrar_profissionais(busca);
+
+
     List<Profissional> temp3 = [];
 
     for (var i in p) {
@@ -56,6 +59,7 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
         _recuperar_profissionais();
       });
     }
+
   }
 
   void _recuperar_favoritos() async {
@@ -98,6 +102,8 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
 
   @override
   Widget build(BuildContext context) {
+    print(profissionais.length);  
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Column(
@@ -118,24 +124,15 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
                       borderRadius: BorderRadius.all(Radius.circular(25))
                   )
               ),
-              onChanged: (text) {
+              onChanged: (text) async {
                 _recuperar_profissionais_filtrado(text);
               },
             ),),
           Expanded(
               child: Container(
-                  child: FutureBuilder(
-                      future:_recuperar_profissionais(),
-                      builder: (context, snapshot){
-                        if(profissionais.isNotEmpty){
-                          return _viewList();
-                        }
-                        else{
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      }
+                  child:  _viewList()
 
-                  )
+
               ))
         ],
       ),

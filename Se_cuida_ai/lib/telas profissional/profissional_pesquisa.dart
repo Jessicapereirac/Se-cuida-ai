@@ -89,17 +89,7 @@ class _profissional_pesquisarState extends State<profissional_pesquisar> {
             ),),
           Expanded(
               child: Container(
-                  child: FutureBuilder(
-                      future:_recuperar_profissionais(),
-                      builder: (context, snapshot){
-                        if(profissionais.isNotEmpty){
-                          return _viewList();
-                        }
-                        else{
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      }
-                  )))
+                  child: _viewList()))
         ],
       ),
     );

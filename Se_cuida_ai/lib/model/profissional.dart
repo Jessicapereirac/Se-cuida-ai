@@ -148,6 +148,8 @@ class Profissional
     }
 
     return list;
+
+
   }
 
   Future<List> recuperar_profissionais(String es) async {

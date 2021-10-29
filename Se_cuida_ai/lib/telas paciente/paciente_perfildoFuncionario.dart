@@ -21,27 +21,6 @@ class perfilProfissional extends StatefulWidget {
 class _perfilProfissionalState extends State<perfilProfissional>{
 
   Profissional profissional = Profissional();
-
-  Future<String> _recuperarDadosUser() async {
-
-    profissional.nome = widget.p.nome;
-    profissional.sobrenome = widget.p.sobrenome;
-    profissional.email = widget.p.email;
-    profissional.senha = widget.p.senha;
-    profissional.dt_nascimento = widget.p.dt_nascimento;
-    profissional.tipo = widget.p.tipo;
-    profissional.genero = widget.p.genero;
-    profissional.numero_cel = widget.p.numero_cel;
-    profissional.registro = widget.p.registro;
-    profissional.especializacao = widget.p.especializacao;
-    profissional.descricao = widget.p.descricao;
-    profissional.imgPerfil = widget.p.imgPerfil;
-    profissional.endereco = widget.p.endereco;
-
-    return 'ok';
-
-  }
-
   Profissional _profissionalHelp = Profissional();
   List<String> favoritos = [];
   String _idUserLogado;
@@ -77,6 +56,27 @@ class _perfilProfissionalState extends State<perfilProfissional>{
       favoritos.add(uid_profissional);
     }
     _profissionalHelp.atualizar_favoritos(favoritos, _idUserLogado);
+  }
+
+  Future<String> _recuperarDadosUser() async {
+
+    profissional.nome = widget.p.nome;
+    profissional.sobrenome = widget.p.sobrenome;
+    profissional.email = widget.p.email;
+    profissional.senha = widget.p.senha;
+    profissional.dt_nascimento = widget.p.dt_nascimento;
+    profissional.tipo = widget.p.tipo;
+    profissional.genero = widget.p.genero;
+    profissional.numero_cel = widget.p.numero_cel;
+    profissional.registro = widget.p.registro;
+    profissional.especializacao = widget.p.especializacao;
+    profissional.descricao = widget.p.descricao;
+    profissional.imgPerfil = widget.p.imgPerfil;
+    profissional.endereco = widget.p.endereco;
+    profissional.uid = widget.p.uid;
+
+    return 'ok';
+
   }
 
   _ligacao() async {
