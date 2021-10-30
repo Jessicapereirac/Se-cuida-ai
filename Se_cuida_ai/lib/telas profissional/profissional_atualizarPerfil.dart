@@ -22,6 +22,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
   TextEditingController _controllerSobrenome = TextEditingController();
   TextEditingController _controllerDescricao = TextEditingController();
   TextEditingController _controllerCelular = TextEditingController();
+  TextEditingController _controllerEndereco = TextEditingController();
 
   String  _idUserLogado;
   File _imgtemp;
@@ -35,21 +36,29 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     String sobrenome = _controllerSobrenome.text;
     String email = _controllerEmail.text;
     String cel = _controllerCelular.text;
+    String endereco = _controllerEndereco.text;
 
     if(nome.length > 2){
       if(sobrenome.length > 2){
         if(email.isNotEmpty && email.contains("@")){
           if(cel.isNotEmpty && cel.length == 11){
-            setState(() {
-              msgError = "";
-            });
-            _atualizarDados();
+            if(endereco.isNotEmpty && endereco.length>10){
+              setState(() {
+                msgError = "";
+              });
+              _atualizarDados();
 
-          } else{
-            setState(() {
-              msgError = "Insira um número de celular  valido";
-            });
-          }
+            } else{
+              setState(() {
+                msgError = "Insira um endereco de celular  valido";
+              });
+            }
+            
+            }else{
+          setState(() {
+            msgError = "Insira um número de celular  valido";
+          });
+        }
         } else{
           setState(() {
             msgError = "Insira um email valido";
@@ -92,6 +101,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     p.tipo = dados["tipo"];
     p.senha = dados["senha"];
     p.uid = dados["uid"];
+    p.endereco = dados["endereco"];
 
     _controllerNome.text = dados["nome"];
     _controllerEmail.text = dados["email"];
@@ -347,6 +357,27 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
                       onChanged: (phone) {
                         print(phone.completeNumber);
                       },
+                    )
+                ),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(32, 8, 32, 8),
+                    child: TextField(
+                      controller: _controllerEndereco,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      minLines: 2,
+                      style: TextStyle(fontSize: 18),
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 20),
+                          hintMaxLines: 3,
+                          hintText: "Endereço: Rua, numero - bairo, cidade - cep",
+                          hintStyle: TextStyle(fontSize: 18),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(32)
+                          )
+                      ),
                     )
                 ),
                 Padding(

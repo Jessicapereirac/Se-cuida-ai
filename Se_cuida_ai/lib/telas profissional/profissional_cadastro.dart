@@ -18,47 +18,53 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
   String profissao = 'Selecione uma opção:';
   String msgErropf = "";
   String msgErroreg = "";
+  String msgErroEnd = "";
   String msgErroApp = "";
 
   TextEditingController _controllerRegistro = TextEditingController();
   TextEditingController _controllerDescricao = TextEditingController();
+  TextEditingController _controllerEndereco = TextEditingController();
 
 
   void _validarDados() {
     String registro = _controllerRegistro.text;
-    String desc = _controllerDescricao.text;
+    String descricao = _controllerDescricao.text;
+    String endereco = _controllerEndereco.text;
 
     if(profissao != 'Selecione uma opção:'){
       msgErropf = "";
       if(registro.isNotEmpty && registro.length > 4 ){
-        //TODO: REGISTRO VALIDO VIA API
-        setState(() {
-          msgErroreg = msgErropf = "";
-        });
+        msgErroreg= "";
+        if(endereco.length >15){
+          setState(() {
+            msgErroEnd = msgErroreg = msgErropf = "";
+          });
 
-        Profissional profissional = Profissional();
-        profissional.nome = widget.p.nome;
-        profissional.sobrenome = widget.p.sobrenome;
-        profissional.email = widget.p.email;
-        profissional.senha = widget.p.senha;
-        profissional.dt_nascimento = widget.p.dt_nascimento;
-        profissional.tipo = widget.p.tipo;
-        profissional.genero = widget.p.genero;
-        profissional.numero_cel = widget.p.numero_cel;
-        profissional.registro = registro;
-        profissional.especializacao = profissao;
-        profissional.descricao = desc;
-        profissional.imgPerfil = null;
+          Profissional profissional = Profissional();
+          profissional.nome = widget.p.nome;
+          profissional.sobrenome = widget.p.sobrenome;
+          profissional.email = widget.p.email;
+          profissional.senha = widget.p.senha;
+          profissional.dt_nascimento = widget.p.dt_nascimento;
+          profissional.tipo = widget.p.tipo;
+          profissional.genero = widget.p.genero;
+          profissional.numero_cel = widget.p.numero_cel;
+          profissional.registro = registro;
+          profissional.especializacao = profissao;
+          profissional.descricao = descricao;
+          profissional.endereco = endereco;
+          profissional.imgPerfil = null;
 
-        _cadastrarUsuario(profissional);
-        print(msgErroApp);
-        if(msgErroApp == 'ok'){
-          print("home profissional");
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(
-                  builder: (context) => homeProfissional()));
-        }
+          _cadastrarUsuario(profissional);
+          print(msgErroApp);
+          if(msgErroApp == 'ok'){
+            print("home profissional");
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                    builder: (context) => homeProfissional()));
+          }
+        }else{msgErroEnd = "Insira um endereço valido";}
 
       } else{
         setState(() {
@@ -161,6 +167,30 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
               Padding(
                   padding: EdgeInsets.only(top: 1, bottom: 10),
                   child: TextField(
+                    controller: _controllerEndereco,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    minLines: 2,
+                    style: TextStyle(fontSize: 18),
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 20),
+                        hintMaxLines: 3,
+                        hintText: "Endereço: Rua, numero - bairo, cidade - cep",
+                        hintStyle: TextStyle(fontSize: 18),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(32)
+                        )
+                    ),
+                  )
+              ),
+              Center(
+                child: Text(msgErroEnd,style: TextStyle(color: Colors.red, fontSize: 12)),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 1, bottom: 10),
+                  child: TextField(
                     controller: _controllerDescricao,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -179,7 +209,6 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
                     ),
                   )
               ),
-
               Padding(
                   padding: EdgeInsets.only(top: 16, bottom: 10),
                   child: Row(

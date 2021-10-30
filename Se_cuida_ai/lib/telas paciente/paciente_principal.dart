@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import 'paciente_navegacao.dart';
 import '../geral_login.dart';
@@ -45,7 +46,6 @@ class _homePacienteState extends State<homePaciente> {
 
   void mudarbotao(int index){
     setState(() {
-      itemselect = index;
       _pageController.animateToPage(index, duration: Duration(milliseconds: 270), curve: Curves.ease);
     });
   }
@@ -53,9 +53,9 @@ class _homePacienteState extends State<homePaciente> {
   Color backgoundColor = Colors.white;
 
   List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.home), Text("  Início "), Colors.purple),
-    NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.amber),
-    NavigationItem(Icon(Icons.favorite_border), Text("Favoritos"), Colors.pinkAccent),
+    NavigationItem(Icon(Icons.home), Text("   Início "), HexColor('#dcbea7')),
+    NavigationItem(Icon(Icons.search), Text("Pesquisar"), HexColor('#6d6875')),
+    NavigationItem(Icon(Icons.favorite_border), Text("Favoritos"),HexColor('#e5989b')),
   ];
   List<String> escolhas = ["Sair"];
 
@@ -100,12 +100,12 @@ class _homePacienteState extends State<homePaciente> {
                       color: selecionado ? backgoundColor : Colors.black
                   ),
                   child:  item.icon),
-              Padding(padding: EdgeInsets.only(left: 8),
+              Padding(padding: EdgeInsets.only(left: 2),
                 child: selecionado ? DefaultTextStyle.merge(
                   textAlign: TextAlign.center,
                     style: TextStyle(
                         color: backgoundColor,
-                      fontSize: 18
+                      fontSize: 17
                     ),
                     child: item.title) : Container(),)
             ],
@@ -117,6 +117,7 @@ class _homePacienteState extends State<homePaciente> {
 
   Widget _criandoNavBar() {
     return Container(
+
       padding: EdgeInsets.only(left: 15,top: 4, bottom: 4,right: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
@@ -128,7 +129,7 @@ class _homePacienteState extends State<homePaciente> {
           )]
       ),
       width: MediaQuery.of(context).size.width,
-      height: 70,
+      height: 60,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: itens.map((item){
@@ -169,9 +170,11 @@ class _homePacienteState extends State<homePaciente> {
         ],
       ),
       body:buildPageView(),
-      bottomNavigationBar: _criandoNavBar(
-
+      bottomNavigationBar: Container(
+        color: Colors.grey[100],
+        child:_criandoNavBar(),
       ),
+
 
     );
   }

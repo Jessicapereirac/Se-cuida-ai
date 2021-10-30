@@ -69,6 +69,7 @@ class _listaProfissionalState extends State<listaProfissional>  {
 
   @override
   Widget build(BuildContext context) {
+    print(profissionais.length);
     return Scaffold(
         appBar:AppBar(
           elevation: 0,
@@ -83,7 +84,10 @@ class _listaProfissionalState extends State<listaProfissional>  {
                 return _viewList();
               }
               else{
-                return Center(child: CircularProgressIndicator());
+                if(_idUserLogado != null){
+                  return Center(child: Text("Ainda não temos profissionais "));
+                }else{return Center(child: CircularProgressIndicator());}
+
               }
             }
 
@@ -147,7 +151,7 @@ class _listaProfissionalState extends State<listaProfissional>  {
                     padding: EdgeInsets.only(top:8, right:8, left:8),
                     child: Text(
                       p.nome,
-                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 25,fontWeight: FontWeight.bold ,
+                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
                           shadows: [Shadow(
                               blurRadius: 9,
                               color: Colors.grey[800],
@@ -158,16 +162,17 @@ class _listaProfissionalState extends State<listaProfissional>  {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top:8, bottom: 8, right:8, left:8),
-                    child: Text(
-                      p.especializacao,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
-                      ),
-                      textAlign: TextAlign.center,
-                    ))
+                  Expanded(
+                      child: Padding(
+                      padding: EdgeInsets.only(top:8, bottom: 1, right:2, left:2),
+                      child: Text(
+                        p.especializacao,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: HexColor('#4b0082'), fontSize: 16,fontWeight: FontWeight.bold ,
+                        ),
+                        textAlign: TextAlign.center,
+                      )))
                 ],
               ),
             ),

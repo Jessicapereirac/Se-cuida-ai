@@ -85,6 +85,7 @@ class Profissional
       print("erro:::"+error.toString());
       return error.toString();
     });
+    print("oi");
 
     return "ok";
 
@@ -153,6 +154,7 @@ class Profissional
   }
 
   Future<List> recuperar_profissionais(String es) async {
+
 
     QuerySnapshot querySnapshot;
 

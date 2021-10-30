@@ -156,18 +156,18 @@ class _favoritosState extends State<favoritos> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top:8, bottom: 8, right:8, left:8),
+                  Expanded(child: Padding(
+                    padding: EdgeInsets.only(top:8, bottom: 8, right:2, left:2),
                     child: Text(
                       p.especializacao,
-                      maxLines: 2,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
+                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 15,fontWeight: FontWeight.bold ,
                       ),
                       textAlign: TextAlign.center,
                     ),
 
-                  )
+                  ))
                 ],
 
               ),

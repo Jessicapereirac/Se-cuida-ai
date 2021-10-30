@@ -8,6 +8,7 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../model/profissional.dart';
+import 'paciente_comentario.dart';
 
 class perfilProfissional extends StatefulWidget {
 
@@ -128,67 +129,71 @@ class _perfilProfissionalState extends State<perfilProfissional>{
       body: SingleChildScrollView(
         child: Container(
 
-          padding: EdgeInsets.fromLTRB(15, 5, 8, 5),
+          padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment : MainAxisAlignment.spaceAround,
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Image.network(profissional.imgPerfil, height: 190, width:160,fit: BoxFit.fill),
-                  SizedBox(
-                    width: 15,
+                  (profissional.imgPerfil != null && profissional.uid!= null)
+                      ? Image.network(profissional.imgPerfil, height: 185, width:155,fit: BoxFit.fill)
+                      : Image.asset('images/user_icon.png', height: 185, width:155,fit: BoxFit.fill)
+                  ,SizedBox(
+                    width: 10,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(left:10),
-                    height: 200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          profissional.nome,
-                          style: TextStyle(fontSize: 32),
-                        ),
-                        Text(
-                          profissional.especializacao,
-                          style: TextStyle(fontSize: 19, color: Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              child:IconTile(
-                                backColor: Color(0xffFFECDD),
-                                imgAssetPath: "images/share.png",
+                  Expanded(
+                    child: Container(
+
+                      height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            profissional.nome,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Text(
+                            profissional.especializacao,
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              GestureDetector(
+                                child:IconTile(
+                                  backColor: Color(0xffFFECDD),
+                                  imgAssetPath: "images/share.png",
+                                ),
+                                onTap: (){_compartilhar();},
                               ),
-                              onTap: (){_compartilhar();},
-                            ),
-                            GestureDetector(
-                              child:IconTile(
-                                backColor: Color(0xffFEF2F0),
-                                imgAssetPath: "images/call.png",
+                              GestureDetector(
+                                child:IconTile(
+                                  backColor: Color(0xffFEF2F0),
+                                  imgAssetPath: "images/call.png",
+                                ),
+                                onTap: (){_ligacao();}
                               ),
-                              onTap: (){_ligacao();}
-                            ),
-                            GestureDetector(
-                              child:IconTile(
-                                backColor: Color(0xffEBECEF),
-                                imgAssetPath: "images/icon-whatsApp.png",
+                              GestureDetector(
+                                child:IconTile(
+                                  backColor: Color(0xffEBECEF),
+                                  imgAssetPath: "images/icon-whatsApp.png",
+                                ),
+                                onTap: (){_whatsapp();},
                               ),
-                              onTap: (){_whatsapp();},
-                            ),
-                          ],
-                        )
-                      ],
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
               SizedBox(
-                height: 22,
+                height: 15,
               ),
               Text(
                 "Sobre",
@@ -262,73 +267,82 @@ class _perfilProfissionalState extends State<perfilProfissional>{
               ),
               Row(
                 children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 24,horizontal: 16),
-                      decoration: BoxDecoration(
-                          color: Color(0xffFBB97C),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          GestureDetector(child:Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: Color(0xffFCCA9B),
-                                  borderRadius: BorderRadius.circular(16)
-                              ),
-                              child: Image.asset("images/comente.png"))),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          GestureDetector(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width/2 - 130,
+                  GestureDetector(
+                    child: Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 22,horizontal: 16),
+                        decoration: BoxDecoration(
+                            color: Color(0xffFBB97C),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    color: Color(0xffFCCA9B),
+                                    borderRadius: BorderRadius.circular(16)
+                                ),
+                                child: Image.asset("images/comente.png")),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width/2 - 100,
                               child: Text(
                                 "Comente aqui",
                                 style: TextStyle(color: Colors.white,
                                     fontSize: 17),
                               ),
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 16,),
+                    onTap:(){
+                      setState(() {
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => comentar()));
 
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 22,horizontal: 16),
-                      decoration: BoxDecoration(
-                          color: Color(0xffA5A5A5),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: Color(0xffBBBBBB),
-                                  borderRadius: BorderRadius.circular(16)
-                              ),
-                              child: Image.asset("images/like.png")),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          GestureDetector(
-                              onTap: (){
-                                setState(() {
-                                  _favorito(profissional.uid);
-                                });},
-                              child: favoritos.contains(profissional.uid)
-                                  ? Container(width: MediaQuery.of(context).size.width/2 - 130,child: Text("Salvo",style: TextStyle(color: Colors.white,fontSize: 17),),)
-                                  : Container(width: MediaQuery.of(context).size.width/2 - 130,child: Text("Salvar",style: TextStyle(color: Colors.white,fontSize: 17),),)
-
-                          )],
-                      ),
-                    ),
+                      });} ,
                   ),
+                  SizedBox(width: 15,),
+
+                 GestureDetector(child:Container(
+                   padding: EdgeInsets.only(right: 10),
+                   child: Expanded(
+                     child: Container(
+                       padding: EdgeInsets.symmetric(vertical: 24,horizontal: 22),
+                       decoration: BoxDecoration(
+                           color: Color(0xffA5A5A5),
+                           borderRadius: BorderRadius.circular(20)),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         children: <Widget>[
+                           Container(
+                               padding: EdgeInsets.all(8),
+                               decoration: BoxDecoration(
+                                   color: Color(0xffBBBBBB),
+                                   borderRadius: BorderRadius.circular(16)
+                               ),
+                               child: Image.asset("images/like.png")),
+                           SizedBox(
+                             width: 16,
+                           ),
+                           favoritos.contains(profissional.uid)
+                               ? Container(width: MediaQuery.of(context).size.width/2 - 125,child: Text("Salvo!",style: TextStyle(color: Colors.white,fontSize: 17),),)
+                               : Container(width: MediaQuery.of(context).size.width/2 - 125,child: Text("Salvar",style: TextStyle(color: Colors.white,fontSize: 17),),)
+
+                         ],
+                       ),
+                     ),
+                   ),
+                 ),
+                     onTap: (){
+                       setState(() {
+                         _favorito(profissional.uid);
+                       });}),
                 ],
               )
             ],

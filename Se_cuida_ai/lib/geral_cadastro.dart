@@ -316,14 +316,14 @@ class _cadastroGeralState extends State<cadastroGeral> {
                 child: Text("Gênero", style: TextStyle(fontSize: 17, color: Colors.black54),)
               ),
               Padding(
-                  padding: EdgeInsets.fromLTRB(20,0,0,5),
+                  padding: EdgeInsets.fromLTRB(10,0,0,5),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: SizedBox(
                           height: 90,
-                          width: 50,
+                          width: 60,
                           child: ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
@@ -437,7 +437,7 @@ class CustomRadio extends StatelessWidget {
         color: _gender.isSelected ? Colors.black : Colors.white,
         child: Container(
           height: 80,
-          width: 80,
+          width: 85,
           alignment: Alignment.center,
           margin: new EdgeInsets.all(5.0),
           child: Column(

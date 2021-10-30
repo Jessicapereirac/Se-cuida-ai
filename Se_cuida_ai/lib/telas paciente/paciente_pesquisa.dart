@@ -102,8 +102,6 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
 
   @override
   Widget build(BuildContext context) {
-    print(profissionais.length);  
-
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Column(
@@ -175,7 +173,7 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
                         0, 3))
               ]
           ),
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(18),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -186,16 +184,16 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
                     ? AssetImage("images/user_icon.png")
                     : NetworkImage(p.imgPerfil),
               ),
-              Flexible(
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Padding(
                         padding: EdgeInsets.only(
-                            top: 8, bottom: 8, right: 8, left: 8),
+                            top: 2, bottom: 2, right: 0, left: 0),
                         child: Text(
                           p.nome + ' ' + p.sobrenome,
-                          maxLines: 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: HexColor('#4b0082'),
                             fontSize: 20,

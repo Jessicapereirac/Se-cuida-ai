@@ -1,7 +1,7 @@
-import 'package:Se_cuida_ai/telas%20profissional/profissional_pesquisa.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../geral_login.dart';
 import 'profissional_navegacao.dart';
@@ -16,19 +16,18 @@ class homeProfissional extends StatefulWidget {
 
 class _homeProfissionalState extends State<homeProfissional> {
 
-  int itemselect = 0;
+  int itemselect;
   String _idUserLogado;
   Color backgoundColor = Colors.white;
 
   List<String> escolhas = ["Sair"];
   List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.search), Text("Pesquisar"), Colors.purple),
-    NavigationItem(Icon(Icons.home_filled), Text("  Perfil "), Colors.amber),
-    NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), Colors.pinkAccent),
+    NavigationItem(Icon(Icons.search), Text("Perfil"), HexColor('#dcbea7')),
+    NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), HexColor('#e5989b')),
   ];
 
   PageController _pageController = PageController(
-      initialPage: 0,
+      initialPage: 1,
       keepPage: false
   );
 
@@ -49,14 +48,15 @@ class _homeProfissionalState extends State<homeProfissional> {
   }
 
   Widget buildPageView(){
+    print(_idUserLogado);
     return PageView(
       controller: _pageController,
       onPageChanged: (index){
         mudaPagina(index);
+        mudarbotao(index);
       },
       children: [
         pagProfissional(_idUserLogado),
-        profissional_pesquisar(),
         atualizarPerfil()
       ],
     );
@@ -91,9 +91,9 @@ class _homeProfissionalState extends State<homeProfissional> {
   Widget _criandoItem(NavigationItem item, bool selecionado){
     return AnimatedContainer(
       duration: Duration(milliseconds: 270),
-      padding: selecionado ? EdgeInsets.only(left: 20, right: 20):null,
+      padding: selecionado ? EdgeInsets.only(left: 53, right: 20):null,
       height: 53,
-      width: selecionado ? 157 : 50,
+      width: selecionado ? 207 : 50,
       decoration: selecionado ? BoxDecoration(
           color: item.color,
           borderRadius: BorderRadius.all(Radius.circular(50))
@@ -102,6 +102,7 @@ class _homeProfissionalState extends State<homeProfissional> {
         scrollDirection: Axis.horizontal,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               IconTheme(
@@ -110,16 +111,16 @@ class _homeProfissionalState extends State<homeProfissional> {
                       color: selecionado ? backgoundColor : Colors.black
                   ),
                   child:  item.icon),
-              Padding(padding: EdgeInsets.only(left: 8),
+              Padding(padding: EdgeInsets.only(left: 10),
                 child: selecionado ? DefaultTextStyle.merge(
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: backgoundColor,
-                        fontSize: 18
+                        fontSize: 17
                     ),
                     child: item.title) : Container(),)
             ],
-          )
+          ),
         ],
       ),
     );
@@ -137,7 +138,7 @@ class _homeProfissionalState extends State<homeProfissional> {
           )]
       ),
       width: MediaQuery.of(context).size.width,
-      height: 70,
+      height: 60,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: itens.map((item){
@@ -183,22 +184,11 @@ class _homeProfissionalState extends State<homeProfissional> {
         ],
       ),
       body:Container(
-        child: FutureBuilder(
-            future:_recupera_profissional(),
-            builder: (context, snapshot){
-              if(snapshot.hasData){
-                return buildPageView();
-              }
-              else{
-                return Center(
-                  child:Center(child: CircularProgressIndicator())
-                );
-              }
-
-            })
+        child: buildPageView()
       ),
-      bottomNavigationBar: _criandoNavBar(
-
+      bottomNavigationBar: Container(
+        color: Colors.grey[100],
+        child:_criandoNavBar(),
       ),
 
     );
