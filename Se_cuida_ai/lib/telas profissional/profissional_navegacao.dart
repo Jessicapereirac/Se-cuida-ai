@@ -122,7 +122,7 @@ _recuperarDadosUser() async {
                                       setState(() {
                                         Navigator.push(context,
                                             MaterialPageRoute(
-                                                builder: (context) => comentarios()));
+                                                builder: (context) => comentarios(p.uid)));
 
                                       });}
                                 ),
@@ -246,7 +246,7 @@ _recuperarDadosUser() async {
                         setState(() {
                           Navigator.push(context,
                               MaterialPageRoute(
-                                  builder: (context) => comentarios()));
+                                  builder: (context) => comentarios(p.uid)));
 
                         });} ,
                     ),

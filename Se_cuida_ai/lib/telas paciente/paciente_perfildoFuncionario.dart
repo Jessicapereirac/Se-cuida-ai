@@ -128,7 +128,6 @@ class _perfilProfissionalState extends State<perfilProfissional>{
     ),
       body: SingleChildScrollView(
         child: Container(
-
           padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +137,8 @@ class _perfilProfissionalState extends State<perfilProfissional>{
                 children: <Widget>[
                   (profissional.imgPerfil != null && profissional.uid!= null)
                       ? Image.network(profissional.imgPerfil, height: 185, width:155,fit: BoxFit.fill)
-                      : Image.asset('images/user_icon.png', height: 185, width:155,fit: BoxFit.fill)
+                      : profissional.imgPerfil != null ? Center(child: CircularProgressIndicator(),)
+                      : Image.asset('images/user_icon.png',height: 185, width:155,fit: BoxFit.fill)
                   ,SizedBox(
                     width: 10,
                   ),
@@ -303,7 +303,7 @@ class _perfilProfissionalState extends State<perfilProfissional>{
                       setState(() {
                         Navigator.push(context,
                             MaterialPageRoute(
-                                builder: (context) => comentar()));
+                                builder: (context) => comentar(profissional.uid)));
 
                       });} ,
                   ),

@@ -155,7 +155,6 @@ class Profissional
 
   Future<List> recuperar_profissionais(String es) async {
 
-
     QuerySnapshot querySnapshot;
 
     if (es == ''){

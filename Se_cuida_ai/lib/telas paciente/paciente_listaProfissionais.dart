@@ -69,7 +69,6 @@ class _listaProfissionalState extends State<listaProfissional>  {
 
   @override
   Widget build(BuildContext context) {
-    print(profissionais.length);
     return Scaffold(
         appBar:AppBar(
           elevation: 0,
