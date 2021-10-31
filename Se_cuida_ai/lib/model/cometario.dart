@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Comentario {
 
-  String _isPaciente;
+  String _experiencia;
   String _comentario;
   String _uidDono;
   String _uidProfissional;
@@ -16,7 +16,7 @@ class Comentario {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-      "isPaciente": this.isPaciente,
+      "experiencia": this.experiencia,
       "comentario": this.comentario,
       "uidDono": this.uidDono,
       "uidProfissional": this.uidProfissional
@@ -26,12 +26,25 @@ class Comentario {
 
   criarcomentario(Comentario c) {
 
+    List ex = [];
+    ex.add(c);
+    print(ex);
+
+    Map<String, dynamic> map ={
+      "comentario" : c.comentario,
+      "uidDono" : c.uidDono,
+      "uidProfissional" : c.uidProfissional,
+      "experiencia" : c.experiencia
+    };
+    ex.add(map);
+
     _db.collection("comentario")
         .doc(c.uidProfissional)
-        .set(c.toMap()).catchError((error) {
+        .update(map).catchError((error) {
       print("erro:::" + error.toString());
       return error.toString();
     });
+
   }
 
   recuperar_comentario(String _idProfissonal) async {
@@ -47,7 +60,7 @@ class Comentario {
 
       Comentario c = Comentario();
 
-      c.isPaciente = dados["isPaciente"];
+      c.experiencia = dados["experiencia"];
       c.comentario = dados["comentario"];
       c.uidDono = dados["uidDono"];
       c.uidProfissional = dados["uidProfissional"];
@@ -58,10 +71,10 @@ class Comentario {
     return list;
   }
 
-  String get isPaciente => _isPaciente;
+  String get experiencia => _experiencia;
 
-  set isPaciente(String value) {
-    _isPaciente = value;
+  set experiencia(String value) {
+    _experiencia = value;
   }
 
   String get comentario => _comentario;

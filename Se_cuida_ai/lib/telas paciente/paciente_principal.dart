@@ -21,7 +21,7 @@ class _homePacienteState extends State<homePaciente> {
 
   PageController _pageController = PageController(
     initialPage: 0,
-    keepPage: true
+    keepPage: false
   );
 
   void mudaPagina(int index){

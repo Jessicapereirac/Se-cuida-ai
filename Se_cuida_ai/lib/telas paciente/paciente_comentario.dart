@@ -18,7 +18,7 @@ class _comentarState extends State<comentar> {
   Comentario _comentarioHelp = Comentario();
   List<Comentario> comentarios = [];
   String _idUserLogado;
-  String escolha ="";
+  String escolha ;
 
   TextEditingController comentController = TextEditingController();
 
@@ -53,47 +53,39 @@ class _comentarState extends State<comentar> {
         builder: (context){
           String estado = "";
           return SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
               child: AlertDialog(
                 title: Text('Escreva seu comentário'),
                 content: StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState){
-                    return ListView(
-                      shrinkWrap: true,
+                    return Column(
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom:5.0),
                           child: Text("Sua experiencia foi: ",style: TextStyle(fontSize: 16)),
                         ),
-                        Column(
+                        RadioListTile(
+                            title:Text("Boa",
+                                style: TextStyle(fontSize: 16)),
+                            value: "0" ,
+                            groupValue: estado ,
+                            onChanged:(String user){
+                              setState(() {
+                                escolha =user;
+                                estado = user;
+                              });
+                            } ),
+                        RadioListTile(
 
-                          children: [
-                            RadioListTile(
-                                title:Text("Boa",
-                                    style: TextStyle(fontSize: 13)),
-                                value: "0" ,
-                                groupValue: estado ,
-                                onChanged:(String user){
-                                  setState(() {
-                                    escolha =user;
-                                    estado = user;
-                                  });
-                                } ),
-                            RadioListTile(
-
-                                title:Text("Ruim",
-                                    style: TextStyle(fontSize: 13)),
-                                value: "1" ,
-                                groupValue: estado ,
-                                onChanged:(String user){
-                                  setState(() {
-                                    escolha =user;
-                                    estado = user;
-                                  });
-                                } ),
-
-
-                          ],),
+                            title:Text("Ruim",
+                                style: TextStyle(fontSize: 16)),
+                            value: "1" ,
+                            groupValue: estado ,
+                            onChanged:(String user){
+                              setState(() {
+                                escolha =user;
+                                estado = user;
+                              });
+                            } ),
                         TextFormField(
                           controller: comentController,
                           keyboardType: TextInputType.multiline,
@@ -108,20 +100,28 @@ class _comentarState extends State<comentar> {
                               child: Icon(Icons.insert_comment_outlined)),
                           ),
                         )
-                      ],
-                    );
+
+
+                      ],);
                   }
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Cancelar'),
+                    child: Text('Cancelar',style: TextStyle(fontSize: 16)),
                   ),
                   TextButton(
                     onPressed: () {
+                      Comentario c = Comentario();
+                      c.uidProfissional = this.widget.p;
+                      c.uidDono = _idUserLogado;
+                      c.comentario = comentController.text;
+                      c.experiencia = estado;
+                      _comentarioHelp.criarcomentario(c);
                       Navigator.pop(context);
+
                     },
-                    child: Text('Enviar'),
+                    child: Text('Enviar',style: TextStyle(fontSize: 16)),
                   ),
                 ],
           ));
@@ -129,6 +129,13 @@ class _comentarState extends State<comentar> {
     );
 
 
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _recuperar_comentarios();
+    comentController.text ='';
   }
 
 
