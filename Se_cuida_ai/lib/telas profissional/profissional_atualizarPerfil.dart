@@ -108,6 +108,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     _controllerSobrenome.text = dados["sobrenome"];
     _controllerDescricao.text = dados["descricao"];
     _controllerCelular.text =  dados["numero_cel"];
+    _controllerEndereco.text =  dados["endereco"];
     _urlperfil = dados["imgPerfil"];
 
   }
@@ -140,7 +141,6 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
 
   Future _recuperandoUrl(TaskSnapshot taskSnapshot) async {
     String url = await taskSnapshot.ref.getDownloadURL();
-    print(url);
     p.imgPerfil = url;
 
     setState(() {
@@ -354,9 +354,7 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
                         ),
                       ),
                       initialCountryCode: 'BR',
-                      onChanged: (phone) {
-                        print(phone.completeNumber);
-                      },
+
                     )
                 ),
                 Padding(

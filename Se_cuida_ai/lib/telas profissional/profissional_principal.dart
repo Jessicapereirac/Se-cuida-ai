@@ -1,3 +1,4 @@
+import 'package:Se_cuida_ai/telas%20profissional/profissional_comentario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +23,13 @@ class _homeProfissionalState extends State<homeProfissional> {
 
   List<String> escolhas = ["Sair"];
   List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.search), Text("Perfil"), HexColor('#dcbea7')),
-    NavigationItem(Icon(Icons.account_circle), Text("Atualizar"), HexColor('#e5989b')),
+    NavigationItem(Icon(Icons.comment), Text("Comentarios"), HexColor('#dcbea7')),
+    NavigationItem(Icon(Icons.home_filled), Text("      Perfil"),  HexColor('#6d6875')),
+    NavigationItem(Icon(Icons.account_circle), Text("   Atualizar"), HexColor('#e5989b')),
   ];
 
   PageController _pageController = PageController(
-      initialPage: 1,
+      initialPage: 0,
       keepPage: false
   );
 
@@ -48,7 +50,6 @@ class _homeProfissionalState extends State<homeProfissional> {
   }
 
   Widget buildPageView(){
-    print(_idUserLogado);
     return PageView(
       controller: _pageController,
       onPageChanged: (index){
@@ -56,6 +57,7 @@ class _homeProfissionalState extends State<homeProfissional> {
         mudarbotao(index);
       },
       children: [
+        comentarios(_idUserLogado),
         pagProfissional(_idUserLogado),
         atualizarPerfil()
       ],
@@ -91,9 +93,9 @@ class _homeProfissionalState extends State<homeProfissional> {
   Widget _criandoItem(NavigationItem item, bool selecionado){
     return AnimatedContainer(
       duration: Duration(milliseconds: 270),
-      padding: selecionado ? EdgeInsets.only(left: 53, right: 20):null,
+      padding: selecionado ? EdgeInsets.only(left: 13, right: 20):null,
       height: 53,
-      width: selecionado ? 207 : 50,
+      width: selecionado ? 190 : 50,
       decoration: selecionado ? BoxDecoration(
           color: item.color,
           borderRadius: BorderRadius.all(Radius.circular(50))

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Comentario {
 
+  String _id;
   String _experiencia;
   String _comentario;
   String _uidDono;
@@ -16,6 +17,7 @@ class Comentario {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
+      "id": this.id,
       "experiencia": this.experiencia,
       "comentario": this.comentario,
       "uidDono": this.uidDono,
@@ -26,46 +28,47 @@ class Comentario {
 
   criarcomentario(Comentario c) {
 
-    List ex = [];
-    ex.add(c);
-    print(ex);
-
-    Map<String, dynamic> map ={
-      "comentario" : c.comentario,
-      "uidDono" : c.uidDono,
-      "uidProfissional" : c.uidProfissional,
-      "experiencia" : c.experiencia
-    };
-    ex.add(map);
-
-    _db.collection("comentario")
-        .doc(c.uidProfissional)
-        .update(map).catchError((error) {
+    _db.collection("comentarios")
+        .add(c.toMap()).catchError((error) {
       print("erro:::" + error.toString());
       return error.toString();
     });
 
   }
+  remove_comentario(String id) async {
 
-  recuperar_comentario(String _idProfissonal) async {
+    QuerySnapshot querySnapshot = await _db.collection("comentarios").where("id", isEqualTo: id).get();
+    var documentID;
 
-    QuerySnapshot querySnapshot;
+    for (var snapshot in querySnapshot.docs) {documentID = snapshot.id;}
+    print(documentID);
 
-    querySnapshot = await _db.collection("comentario").where("uidProfissional", isEqualTo: _idProfissonal).get();
+    _db.collection("comentarios").doc(documentID.toString()).delete();
+
+  }
+
+  recuperar_comentario(String _uidProfissonal) async {
+
+    QuerySnapshot querySnapshot = await _db.collection("comentarios")
+        .where("uidProfissional", isEqualTo: _uidProfissonal)
+        .get();
 
     List<Comentario> list = [];
 
     for (DocumentSnapshot item in querySnapshot.docs){
+
       var dados = item.data();
 
       Comentario c = Comentario();
 
+      c.id =dados ["id"];
       c.experiencia = dados["experiencia"];
       c.comentario = dados["comentario"];
       c.uidDono = dados["uidDono"];
-      c.uidProfissional = dados["uidProfissional"];
+      c.uidProfissional = dados["uidProfissonal"];
 
       list.add(c);
+
     }
 
     return list;
@@ -75,6 +78,12 @@ class Comentario {
 
   set experiencia(String value) {
     _experiencia = value;
+  }
+
+  String get id => _id;
+
+  set id(String value) {
+    _id = value;
   }
 
   String get comentario => _comentario;

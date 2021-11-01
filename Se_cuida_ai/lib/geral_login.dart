@@ -20,6 +20,34 @@ class _loginState extends State<login> {
 
   String msgErro = "";
 
+  Future _verificarLogado() async{
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User userLogado = await auth.currentUser;
+
+    if(userLogado != null){
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentSnapshot snapshot = await db.collection("usuarios")
+          .doc(userLogado.uid)
+          .get();
+
+      Map<String, dynamic> dados = snapshot.data();
+
+      if (dados != null && dados["tipo"] == "0"){
+        print("home paciente");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (context) => homePaciente()));
+      }
+      else{
+        print("home profissional");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (context) => homeProfissional()));
+      }
+    }
+
+  }
+
   void _validarDados() {
     String email = _controllerEmail.text;
     String senha = _controllerSenha.text;
@@ -78,6 +106,13 @@ class _loginState extends State<login> {
         msgErro = "Login ou senha invalidos, verfique e tente novamente";
       });
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _verificarLogado();
   }
 
   @override
