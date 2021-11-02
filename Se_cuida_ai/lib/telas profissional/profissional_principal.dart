@@ -23,7 +23,6 @@ class _homeProfissionalState extends State<homeProfissional> {
 
   List<String> escolhas = ["Sair"];
   List<NavigationItem> itens = [
-    NavigationItem(Icon(Icons.comment), Text("Comentarios"), HexColor('#dcbea7')),
     NavigationItem(Icon(Icons.home_filled), Text("      Perfil"),  HexColor('#6d6875')),
     NavigationItem(Icon(Icons.account_circle), Text("   Atualizar"), HexColor('#e5989b')),
   ];
@@ -54,10 +53,8 @@ class _homeProfissionalState extends State<homeProfissional> {
       controller: _pageController,
       onPageChanged: (index){
         mudaPagina(index);
-        mudarbotao(index);
       },
       children: [
-        comentarios(_idUserLogado),
         pagProfissional(_idUserLogado),
         atualizarPerfil()
       ],
@@ -186,7 +183,7 @@ class _homeProfissionalState extends State<homeProfissional> {
         ],
       ),
       body:Container(
-        child: buildPageView()
+          child: buildPageView()
       ),
       bottomNavigationBar: Container(
         color: Colors.grey[100],

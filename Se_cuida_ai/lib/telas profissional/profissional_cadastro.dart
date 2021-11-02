@@ -56,6 +56,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
           profissional.descricao = descricao;
           profissional.endereco = endereco;
           profissional.imgPerfil = null;
+          profissional.numComente = 0;
 
           _cadastrarUsuario(profissional);
           print(msgErroApp);

@@ -28,7 +28,6 @@ class _telaInicialState extends State<telaInicial> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
       mainAxisSpacing: 30,
-
       crossAxisSpacing: 20,
       childAspectRatio: 0.8),
       itemCount: profissoes.length,

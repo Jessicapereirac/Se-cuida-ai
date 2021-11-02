@@ -74,6 +74,7 @@ class _perfilProfissionalState extends State<perfilProfissional>{
     profissional.imgPerfil = widget.p.imgPerfil;
     profissional.endereco = widget.p.endereco;
     profissional.uid = widget.p.uid;
+    profissional.numComente = widget.p.numComente;
 
     return 'ok';
 

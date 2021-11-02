@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:Se_cuida_ai/model/cometario.dart';
 import 'package:Se_cuida_ai/telas%20paciente/paciente_comentario.dart';
 import 'package:Se_cuida_ai/telas%20profissional/profissional_comentario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,10 +23,15 @@ class pagProfissional extends StatefulWidget {
 class _pagProfissionalState extends State<pagProfissional> {
 
   Profissional p = Profissional();
+  Comentario _comentarioHelp = Comentario();
+  Profissional _profissionalHelp = Profissional();
+  List<Comentario> comente = [];
+  int num_comente ;
+  String _idUserLogado;
 
-_recuperarDadosUser() async {
+  _recuperarDadosUser() async {
 
-    String _idUserLogado = widget.uid;
+    _idUserLogado = widget.uid;
 
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentSnapshot snapshot = await db.collection("profissional")
@@ -48,9 +54,29 @@ _recuperarDadosUser() async {
     p.senha = dados["senha"];
     p.uid = dados["uid"];
     p.endereco = dados["endereco"];
+    p.numComente = dados["numComente"];
 
     return dados;
 
+  }
+
+  _recuperar_comentarios() async {
+    String id = _idUserLogado;
+
+    List c = await _comentarioHelp.recuperar_comentario(id);
+
+    List<Comentario> temp = [];
+
+    for (var i in c) {
+      temp.add(i);
+    }
+
+    setState(() {
+      comente = temp;
+      num_comente =comente.length;
+    });
+
+    temp = null;
   }
 
   _compartilhar(){
@@ -61,6 +87,7 @@ _recuperarDadosUser() async {
   void initState() {
     super.initState();
     _recuperarDadosUser();
+    _recuperar_comentarios();
   }
 
   Widget build(BuildContext context) {
@@ -101,34 +128,59 @@ _recuperarDadosUser() async {
                           SizedBox(
                             height: 15,
                           ),
+
                           Padding(
                             padding: const EdgeInsets.only(left: 12.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                GestureDetector(
-                                  child:IconTile(
-                                    backColor: Color(0xffFEF2F0),
-                                    imgAssetPath: "images/share.png",
-                                  ),
-                                  onTap: (){_compartilhar();},
-                                ),
-                                GestureDetector(
-                                    child:IconTile(
-                                      backColor: Color(0xffFFECDD),
-                                      imgAssetPath: "images/comente.png",
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      child:IconTile(
+                                        backColor: Color(0xffFEF2F0),
+                                        imgAssetPath: "images/share.png",
+                                      ),
+                                      onTap: (){_compartilhar();},
                                     ),
-                                    onTap:(){
-                                      setState(() {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) => comentarios(p.uid)));
+                                    GestureDetector(
+                                        child:Container(
+                                          height: 55,
+                                          child:Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              IconTile(
+                                                backColor: Color(0xffFFECDD),
+                                                imgAssetPath: "images/comente.png",
+                                              ),
+                                              num_comente > p.numComente ?
+                                              Positioned(top: 0, right:0 ,bottom: 35, left: 12,
+                                                child: Container(
 
-                                      });}
+                                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                                  alignment: Alignment.center,
+                                                  child: Text((num_comente - p.numComente).toString(), style: TextStyle(color: Colors.white),),
+                                                ),
+                                              )
+                                                  : Container(),
+
+                                            ],
+                                          ),
+                                        ),
+                                        onTap:(){
+                                          setState(() {
+                                            p.numComente = num_comente;
+                                            _profissionalHelp.atualizarDados(p, p.uid);
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => comentarios(p)));
+
+                                          });}
+                                    ),
+
+
+
+                                  ],
                                 ),
 
-                              ],
-                            ),
                           )
                         ],
                       ),
@@ -244,9 +296,11 @@ _recuperarDadosUser() async {
                       ),
                       onTap:(){
                         setState(() {
+                          p.numComente = num_comente;
+                          _profissionalHelp.atualizarDados(p, p.uid);
                           Navigator.push(context,
                               MaterialPageRoute(
-                                  builder: (context) => comentarios(p.uid)));
+                                  builder: (context) => comentarios(p)));
 
                         });} ,
                     ),

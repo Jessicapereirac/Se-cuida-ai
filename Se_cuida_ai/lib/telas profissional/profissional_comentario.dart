@@ -1,11 +1,13 @@
 import 'package:Se_cuida_ai/model/cometario.dart';
+import 'package:Se_cuida_ai/model/profissional.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class comentarios extends StatefulWidget {
 
-  String p;
+  Profissional p;
   comentarios(this.p);
 
   @override
@@ -21,7 +23,7 @@ class _comentariosState extends State<comentarios> {
   TextEditingController comentController = TextEditingController();
 
   _recuperar_comentarios() async {
-    String id = this.widget.p;
+    String id = this.widget.p.uid;
 
     List c = await _comentarioHelp.recuperar_comentario(id);
 
@@ -153,10 +155,12 @@ class _comentariosState extends State<comentarios> {
 
   );
 
+
   @override
   void initState() {
     super.initState();
     _recuperar_comentarios();
+
   }
 
   @override

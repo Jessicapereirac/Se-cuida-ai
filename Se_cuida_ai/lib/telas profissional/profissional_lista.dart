@@ -20,9 +20,6 @@ class _listaProfissionalState extends State<listaProfissional>  {
   List<Profissional> profissionais = [];
 
   Future<List<Profissional>> _recuperar_profissionais() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    String _idUserLogado = userLogado.uid;
 
     List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
 

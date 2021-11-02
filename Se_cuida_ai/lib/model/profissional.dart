@@ -17,6 +17,9 @@ class Profissional
   String _imgPerfil;
   String _uid;
   String _endereco;
+  int _numComente;
+
+
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -39,7 +42,8 @@ class Profissional
       "imgPerfil" : this.imgPerfil,
       "senha" : this.senha,
       "uid" : this.uid,
-      "endereco" : this.endereco
+      "endereco" : this.endereco,
+      "numComente" : this.numComente
 
     };
     return map;
@@ -159,6 +163,7 @@ class Profissional
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
       p.endereco = dados["endereco"];
+      p.numComente = dados["numComente"];
 
       list.add(p);
     }
@@ -200,11 +205,18 @@ class Profissional
       p.imgPerfil = dados["imgPerfil"];
       p.uid = dados["uid"];
       p.endereco = dados["endereco"];
+      p.numComente = dados["numComente"];
 
       list.add(p);
     }
 
     return list;
+  }
+
+  int get numComente => _numComente;
+
+  set numComente(int value) {
+    _numComente = value;
   }
 
   String get descricao => _descricao;

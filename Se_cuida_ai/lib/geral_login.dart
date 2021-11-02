@@ -24,7 +24,7 @@ class _loginState extends State<login> {
   String msgErro = "";
   Timer timer;
 
-  Future _verificarLogado() async{
+  Future _rLogado() async{
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
     bool a= await verifica();
@@ -38,8 +38,8 @@ class _loginState extends State<login> {
       Map<String, dynamic> dados = snapshot.data();
 
 
-      if(a){
-        timer.cancel();
+      //if(a){
+        //timer.cancel();
         if (dados != null && dados["tipo"] == "0" ){
           print("home paciente");
           Navigator.pushReplacement(context,
@@ -52,7 +52,7 @@ class _loginState extends State<login> {
               MaterialPageRoute(
                   builder: (context) => homeProfissional()));
         }
-      }else{
+     /* }else{
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -73,7 +73,7 @@ class _loginState extends State<login> {
           },
         );
 
-      }
+      }*/
     }
 
   }
@@ -110,8 +110,8 @@ class _loginState extends State<login> {
 
   Future<void> _entrar( String email, String senha) async {
 
-    await auth.currentUser.reload();
-    bool a= await verifica();
+    //await auth.currentUser.reload();
+   // bool a= await verifica();
     auth.signInWithEmailAndPassword(
         email: email,
         password: senha
@@ -125,7 +125,7 @@ class _loginState extends State<login> {
       Map<String, dynamic> dados = snapshot.data();
 
 
-      if (a){
+      //if (a){
         if (dados != null && dados["tipo"] == "0"){
           print("home paciente");
           Navigator.pushReplacement(context,
@@ -138,7 +138,7 @@ class _loginState extends State<login> {
               MaterialPageRoute(
                   builder: (context) => homeProfissional()));
         }
-      }else {
+      /*}else {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -158,7 +158,7 @@ class _loginState extends State<login> {
             );
           },
         );
-      }
+      }*/
     }).catchError((error){
       print(error.toString());
       setState(() {
@@ -169,10 +169,10 @@ class _loginState extends State<login> {
 
   @override
   void initState() {
-    _verificarLogado();
-    timer = Timer.periodic(Duration(seconds: 2), (timer){
-      verifica();
-    });
+    //_verificarLogado();
+    //timer = Timer.periodic(Duration(seconds: 2), (timer){
+      //verifica();
+    //});
     super.initState();
 
   }
