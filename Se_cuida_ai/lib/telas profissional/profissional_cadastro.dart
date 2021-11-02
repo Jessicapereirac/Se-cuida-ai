@@ -4,6 +4,8 @@ import 'package:Se_cuida_ai/telas%20profissional/profissional_principal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../geral_login.dart';
+
 class cadastroProfissional extends StatefulWidget {
 
   Paciente p;
@@ -62,7 +64,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
             Navigator.of(context).popUntil((route) => route.isFirst);
             Navigator.pushReplacement(context,
                 MaterialPageRoute(
-                    builder: (context) => homeProfissional()));
+                    builder: (context) => login()));
           }
         }else{msgErroEnd = "Insira um endereço valido";}
 

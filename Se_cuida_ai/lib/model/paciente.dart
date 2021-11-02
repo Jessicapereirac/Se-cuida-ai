@@ -1,6 +1,7 @@
 import 'package:Se_cuida_ai/model/profissional.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class Paciente{
 
@@ -98,6 +99,11 @@ class Paciente{
         print("erro:::"+error.toString());
         return error.toString();
 
+      });
+
+      firebaseUser.user.sendEmailVerification().catchError((error) {
+        print("erro:::"+error.toString());
+        return error.toString();
       });
 
 

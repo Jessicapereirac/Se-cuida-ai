@@ -92,11 +92,15 @@ class Profissional
 
       });
 
+      firebaseUser.user.sendEmailVerification().catchError((error) {
+        print("erro:::"+error.toString());
+        return error.toString();
+      });
+
     }).catchError((error) {
       print("erro:::"+error.toString());
       return error.toString();
     });
-    print("oi");
 
     return "ok";
 

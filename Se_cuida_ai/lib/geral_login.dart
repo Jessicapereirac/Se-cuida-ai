@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Se_cuida_ai/geral_cadastro.dart';
 import 'package:Se_cuida_ai/telas%20paciente/paciente_principal.dart';
 import 'package:Se_cuida_ai/telas%20profissional/profissional_principal.dart';
@@ -7,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class login extends StatefulWidget {
-  const login({key}) : super(key: key);
 
   @override
   _loginState createState() => _loginState();
@@ -18,11 +19,15 @@ class _loginState extends State<login> {
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSenha = TextEditingController();
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   String msgErro = "";
+  Timer timer;
 
   Future _verificarLogado() async{
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
+    bool a= await verifica();
 
     if(userLogado != null){
       FirebaseFirestore db = FirebaseFirestore.instance;
@@ -32,17 +37,42 @@ class _loginState extends State<login> {
 
       Map<String, dynamic> dados = snapshot.data();
 
-      if (dados != null && dados["tipo"] == "0"){
-        print("home paciente");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(
-                builder: (context) => homePaciente()));
-      }
-      else{
-        print("home profissional");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(
-                builder: (context) => homeProfissional()));
+
+      if(a){
+        timer.cancel();
+        if (dados != null && dados["tipo"] == "0" ){
+          print("home paciente");
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(
+                  builder: (context) => homePaciente()));
+        }
+        else{
+          print("home profissional");
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(
+                  builder: (context) => homeProfissional()));
+        }
+      }else{
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // retorna um objeto do tipo Dialog
+            return AlertDialog(
+              title: new Text("Email de verificação"),
+              content: new Text("Verifique seu email!"),
+              actions: <Widget>[
+                // define os botões na base do dialogo
+                new TextButton(
+                  child: new Text("Fechar"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+
       }
     }
 
@@ -58,7 +88,6 @@ class _loginState extends State<login> {
         setState(() {
           msgErro = "";
         });
-
        _entrar(email, senha);
 
       } else{
@@ -73,9 +102,16 @@ class _loginState extends State<login> {
     }
   }
 
-  void _entrar( String email, String senha){
-    FirebaseAuth auth = FirebaseAuth.instance;
+  verifica() async {
+    await auth.currentUser.reload();
+    return auth.currentUser.emailVerified;
 
+  }
+
+  Future<void> _entrar( String email, String senha) async {
+
+    await auth.currentUser.reload();
+    bool a= await verifica();
     auth.signInWithEmailAndPassword(
         email: email,
         password: senha
@@ -88,17 +124,40 @@ class _loginState extends State<login> {
 
       Map<String, dynamic> dados = snapshot.data();
 
-      if (dados != null && dados["tipo"] == "0"){
-        print("home paciente");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(
-                builder: (context) => homePaciente()));
-      }
-      else{
-        print("home profissional");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(
-                builder: (context) => homeProfissional()));
+
+      if (a){
+        if (dados != null && dados["tipo"] == "0"){
+          print("home paciente");
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(
+                  builder: (context) => homePaciente()));
+        }
+        else{
+          print("home profissional");
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(
+                  builder: (context) => homeProfissional()));
+        }
+      }else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // retorna um objeto do tipo Dialog
+            return AlertDialog(
+              title: new Text("Email de verificação"),
+              content: new Text("Verifique seu email!"),
+              actions: <Widget>[
+                // define os botões na base do dialogo
+                new TextButton(
+                  child: new Text("Fechar"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     }).catchError((error){
       print(error.toString());
@@ -110,9 +169,18 @@ class _loginState extends State<login> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     _verificarLogado();
+    timer = Timer.periodic(Duration(seconds: 2), (timer){
+      verifica();
+    });
+    super.initState();
+
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
