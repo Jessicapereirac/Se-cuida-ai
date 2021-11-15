@@ -1,10 +1,8 @@
-import 'package:Se_cuida_ai/telas%20profissional/profissional_comentario.dart';
+import 'package:Se_cuida_ai/model/profissional.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-import '../geral_login.dart';
 import 'profissional_navegacao.dart';
 import 'profissional_atualizarPerfil.dart';
 
@@ -20,8 +18,9 @@ class _homeProfissionalState extends State<homeProfissional> {
   int itemselect;
   String _idUserLogado;
   Color backgoundColor = Colors.white;
+  Profissional controllerP = Profissional();
 
-  List<String> escolhas = ["Sair"];
+  List<String> escolhas = ["Apagar conta","Sair"];
   List<NavigationItem> itens = [
     NavigationItem(Icon(Icons.home_filled), Text("      Perfil"),  HexColor('#6d6875')),
     NavigationItem(Icon(Icons.account_circle), Text("   Atualizar"), HexColor('#e5989b')),
@@ -74,17 +73,40 @@ class _homeProfissionalState extends State<homeProfissional> {
       case("Sair"):
         _deslogar();
         break;
+      case("Apagar conta"):
+        _apagar();
+        break;
     }
   }
 
-  void _deslogar() async {
+  void _deslogar() async {controllerP.deslogar_profissional(context);}
 
-    FirebaseAuth auth = FirebaseAuth.instance;
-    await auth.signOut();
-
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(
-            builder: (context) => login()));
+  _apagar(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // retorna um objeto do tipo Dialog
+        return AlertDialog(
+          title: new Text("Apagar conta"),
+          content: new Text("Tem certeza qeu desejar apagar sua conta?"),
+          actions: <Widget>[
+            // define os botões na base do dialogo
+            TextButton(
+              child: new Text("Confirmar"),
+              onPressed: () {
+                controllerP.apagar_profissional(context);
+              },
+            ),
+            TextButton(
+              child: new Text("Cancelar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _criandoItem(NavigationItem item, bool selecionado){

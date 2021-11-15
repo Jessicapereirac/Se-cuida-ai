@@ -1,10 +1,10 @@
+import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import 'paciente_navegacao.dart';
-import '../geral_login.dart';
 import 'paciente_favoritos.dart';
 import 'paciente_pesquisa.dart';
 
@@ -18,6 +18,7 @@ class homePaciente extends StatefulWidget {
 class _homePacienteState extends State<homePaciente> {
 
   int itemselect = 0;
+  Paciente controllerP = Paciente();
 
   PageController _pageController = PageController(
     initialPage: 0,
@@ -57,7 +58,7 @@ class _homePacienteState extends State<homePaciente> {
     NavigationItem(Icon(Icons.search), Text("Pesquisar"), HexColor('#6d6875')),
     NavigationItem(Icon(Icons.favorite_border), Text("Favoritos"),HexColor('#e5989b')),
   ];
-  List<String> escolhas = ["Sair"];
+  List<String> escolhas = ["Apagar conta","Sair"];
 
   void _escolhaUsuario(String item){
 
@@ -65,17 +66,40 @@ class _homePacienteState extends State<homePaciente> {
       case("Sair"):
         _deslogar();
         break;
+      case("Apagar conta"):
+        _apagar();
+        break;
     }
   }
 
-  void _deslogar() async {
+  void _deslogar() async {controllerP.deslogar_paciente(context);}
 
-    FirebaseAuth auth = FirebaseAuth.instance;
-    await auth.signOut();
-
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(
-            builder: (context) => login()));
+  _apagar(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // retorna um objeto do tipo Dialog
+        return AlertDialog(
+          title: new Text("Apagar conta"),
+          content: new Text("Tem certeza qeu desejar apagar sua conta?"),
+          actions: <Widget>[
+            // define os botões na base do dialogo
+            TextButton(
+              child: new Text("Confirmar"),
+              onPressed: () {
+                controllerP.apagar_paciente(context);
+              },
+            ),
+            TextButton(
+              child: new Text("Cancelar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _criandoItem(NavigationItem item, bool selecionado){

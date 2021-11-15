@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../geral_login.dart';
 
 class Profissional
 {
@@ -47,6 +50,28 @@ class Profissional
 
     };
     return map;
+  }
+
+  apagar_profissional(context) async{
+    User userLogado = await _auth.currentUser;
+    String _idUserLogado = userLogado.uid;
+    userLogado.delete();
+
+    _db.collection("profissional")
+        .doc(_idUserLogado)
+        .delete();
+
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(
+            builder: (context) => login()));
+
+  }
+  deslogar_profissional(context) async{
+    await _auth.signOut();
+
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(
+            builder: (context) => login()));
   }
 
   void atualizarDados (Profissional p, String _idUserLogado) async {

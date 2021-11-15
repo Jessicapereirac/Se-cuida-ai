@@ -288,7 +288,7 @@ class _comentarState extends State<comentar> {
         child: Card(
           child: Container(
                 padding: EdgeInsets.all(5),
-                height: 75,
+                height: 70,
                 width: 70,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -347,7 +347,7 @@ class _comentarState extends State<comentar> {
                                   size: 27,
                                 ),
                                 child: Icon(Icons.clear))
-                            : null)
+                            : Container())
                   ],
                 )),
         ),

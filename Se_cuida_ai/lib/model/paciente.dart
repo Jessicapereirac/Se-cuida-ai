@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../geral_login.dart';
+
 class Paciente{
 
   String _nome;
@@ -64,6 +66,29 @@ class Paciente{
     }
 
     return list;
+  }
+
+  apagar_paciente(context) async{
+    User userLogado = await _auth.currentUser;
+    String _idUserLogado = userLogado.uid;
+    userLogado.delete();
+
+    _db.collection("usuarios")
+        .doc(_idUserLogado)
+        .delete();
+    _db.collection("favoritos")
+        .doc(_idUserLogado)
+        .delete();
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(
+            builder: (context) => login()));
+  }
+  deslogar_paciente(context) async{
+    await _auth.signOut();
+
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(
+            builder: (context) => login()));
   }
 
   void atualizarDados (Paciente p, String _idUserLogado) async {
