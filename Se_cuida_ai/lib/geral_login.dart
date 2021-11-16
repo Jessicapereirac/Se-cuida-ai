@@ -24,7 +24,7 @@ class _loginState extends State<login> {
   String msgErro = "";
   Timer timer;
 
-  Future _rLogado() async{
+  Future _Logado() async{
     FirebaseAuth auth = FirebaseAuth.instance;
     User userLogado = await auth.currentUser;
     bool a= await verifica();
@@ -167,9 +167,36 @@ class _loginState extends State<login> {
     });
   }
 
+  _verificarLogado() async {
+
+    User userLogado = await auth.currentUser;
+    FirebaseFirestore _db = FirebaseFirestore.instance;
+    QuerySnapshot querySnapshot = await _db.collection("profissional")
+        .where("uid", isGreaterThanOrEqualTo: userLogado.uid)
+        .get();
+
+    if(userLogado != null && auth.currentUser.emailVerified){
+
+      if (querySnapshot.docs == null ){
+        print("home paciente");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (context) => homePaciente()));
+      }
+      else{
+        print("home profissional");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (context) => homeProfissional()));
+      }
+
+    }else{print("Deslogado");}
+
+  }
+
   @override
   void initState() {
-    //_verificarLogado();
+    _verificarLogado();
     //timer = Timer.periodic(Duration(seconds: 2), (timer){
       //verifica();
     //});
