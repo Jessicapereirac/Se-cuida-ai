@@ -1,15 +1,13 @@
 import 'dart:io' show Platform;
 import 'package:Se_cuida_ai/model/cometario.dart';
-import 'package:Se_cuida_ai/telas%20paciente/paciente_comentario.dart';
-import 'package:Se_cuida_ai/telas%20profissional/profissional_comentario.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Se_cuida_ai/model/profissional.dart';
+import 'package:Se_cuida_ai/view/telas%20profissional/profissional_comentario.dart';import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../model/profissional.dart';
+import '../../controller.dart';
+
 
 class pagProfissional extends StatefulWidget {
 
@@ -28,36 +26,14 @@ class _pagProfissionalState extends State<pagProfissional> {
   List<Comentario> comente = [];
   int num_comente ;
   String _idUserLogado;
+  Controller controller = Controller ();
 
   _recuperarDadosUser() async {
 
+    p = await controller.recuperarDados() ;
     _idUserLogado = widget.uid;
 
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentSnapshot snapshot = await db.collection("profissional")
-        .doc(_idUserLogado)
-        .get();
-
-    Map<String, dynamic> dados = snapshot.data();
-
-    p.email = dados["email"];
-    p.dt_nascimento = dados["dt_nascimento"];
-    p.nome = dados["nome"];
-    p.imgPerfil = dados["imgPerfil"];
-    p.sobrenome = dados["sobrenome"];
-    p.especializacao = dados["especializacao"];
-    p.numero_cel = dados["numero_cel"];
-    p.genero = dados["genero"];
-    p.descricao = dados["descricao"];
-    p.registro = dados["registro"];
-    p.tipo = dados["tipo"];
-    p.senha = dados["senha"];
-    p.uid = dados["uid"];
-    p.endereco = dados["endereco"];
-    p.numComente = dados["numComente"];
-
-    return dados;
-
+    return p;
   }
 
   _recuperar_comentarios() async {

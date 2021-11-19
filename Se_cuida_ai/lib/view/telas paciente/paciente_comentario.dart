@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../../controller.dart';
+
 class comentar extends StatefulWidget {
   String p;
   comentar(this.p);
@@ -23,13 +25,11 @@ class _comentarState extends State<comentar> {
   ScrollController controller;
   bool fabIsVisible = true;
 
+  Controller controllerP = Controller();
 
   TextEditingController comentController = TextEditingController();
 
   _recuperar_comentarios() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
     String id = this.widget.p;
 
     List c = await _comentarioHelp.recuperar_comentario(id);
@@ -174,6 +174,7 @@ class _comentarState extends State<comentar> {
           ));
         });
   }
+
   _exibirComentario(Comentario c) {
     showDialog(
         context: context,
@@ -213,9 +214,16 @@ class _comentarState extends State<comentar> {
         });
   }
 
+  _recuprando_id() async {
+    String v = await controllerP.recuperar_id_pac();
+    _idUserLogado = v;
+    return v;
+  }
+
   @override
   void initState() {
     super.initState();
+    _recuprando_id();
     _recuperar_comentarios();
     controller = ScrollController();
     controller.addListener(() {

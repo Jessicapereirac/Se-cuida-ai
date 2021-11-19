@@ -1,10 +1,9 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/telas%20profissional/profissional_principal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../geral_login.dart';
+import '../../controller.dart';
 
 class cadastroProfissional extends StatefulWidget {
 
@@ -27,6 +26,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
   TextEditingController _controllerDescricao = TextEditingController();
   TextEditingController _controllerEndereco = TextEditingController();
 
+  Controller controller = Controller();
 
   void _validarDados() {
     String registro = _controllerRegistro.text;
@@ -59,14 +59,7 @@ class _cadastroProfissionalState extends State<cadastroProfissional> {
           profissional.numComente = 0;
 
           _cadastrarUsuario(profissional);
-          print(msgErroApp);
-          if(msgErroApp == 'ok'){
-            print("home profissional");
-            Navigator.of(context).popUntil((route) => route.isFirst);
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(
-                    builder: (context) => login()));
-          }
+          if(msgErroApp == 'ok'){controller.realizar_login(context, "1");}
         }else{msgErroEnd = "Insira um endereço valido";}
 
       } else{

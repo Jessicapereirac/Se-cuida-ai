@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../../controller.dart';
 import 'paciente_navegacao.dart';
 import 'paciente_favoritos.dart';
 import 'paciente_pesquisa.dart';
@@ -18,7 +19,7 @@ class homePaciente extends StatefulWidget {
 class _homePacienteState extends State<homePaciente> {
 
   int itemselect = 0;
-  Paciente controllerP = Paciente();
+  Controller controller = Controller();
 
   PageController _pageController = PageController(
     initialPage: 0,
@@ -72,7 +73,7 @@ class _homePacienteState extends State<homePaciente> {
     }
   }
 
-  void _deslogar() async {controllerP.deslogar_paciente(context);}
+  void _deslogar() async {controller.deslogar_paciente(context);}
 
   _apagar(){
     showDialog(
@@ -81,13 +82,13 @@ class _homePacienteState extends State<homePaciente> {
         // retorna um objeto do tipo Dialog
         return AlertDialog(
           title: new Text("Apagar conta"),
-          content: new Text("Tem certeza qeu desejar apagar sua conta?"),
+          content: new Text("Tem certeza que desejar apagar sua conta?"),
           actions: <Widget>[
             // define os botões na base do dialogo
             TextButton(
               child: new Text("Confirmar"),
               onPressed: () {
-                controllerP.apagar_paciente(context);
+                controller.apagar_paciente(context);
               },
             ),
             TextButton(

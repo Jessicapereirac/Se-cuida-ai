@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../geral_login.dart';
+import '../view/geral_login.dart';
 
 class Profissional
 {
@@ -52,7 +52,28 @@ class Profissional
     return map;
   }
 
-  apagar_profissional(context) async{
+  recuperar_uid() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    User userLogado = await _auth.currentUser;
+    String v = userLogado.uid;
+    return v;
+  }
+
+  recuperar_unico_profissional() async {
+
+    User userLogado = await _auth.currentUser;
+    String _idUserLogado = userLogado.uid;
+
+    DocumentSnapshot snapshot = await _db.collection("profissional")
+        .doc(_idUserLogado)
+        .get();
+
+    Map<String, dynamic> dados = snapshot.data();
+
+    return dados;
+  }
+
+  deletar_profissional(context) async{
     User userLogado = await _auth.currentUser;
     String _idUserLogado = userLogado.uid;
     userLogado.delete();
@@ -60,21 +81,23 @@ class Profissional
     _db.collection("profissional")
         .doc(_idUserLogado)
         .delete();
-
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(
-            builder: (context) => login()));
-
   }
-  deslogar_profissional(context) async{
-    await _auth.signOut();
 
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(
-            builder: (context) => login()));
-  }
+  sair_profissional() async{await _auth.signOut();}
 
   void atualizarDados (Profissional p, String _idUserLogado) async {
+
+    print(p.email);
+    print(p.senha);
+
+    _auth.signInWithEmailAndPassword(
+        email: p.email,
+        password: p.senha
+    ).then((userCredencial){
+      userCredencial.user.updateEmail(p.email).catchError((error){
+        print("erro:::"+error.toString());
+      });
+    });
 
     _db.collection("profissional")
         .doc(_idUserLogado)

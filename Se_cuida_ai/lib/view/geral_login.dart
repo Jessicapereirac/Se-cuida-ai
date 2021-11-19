@@ -1,12 +1,13 @@
 import 'dart:async';
-
-import 'package:Se_cuida_ai/geral_cadastro.dart';
-import 'package:Se_cuida_ai/telas%20paciente/paciente_principal.dart';
-import 'package:Se_cuida_ai/telas%20profissional/profissional_principal.dart';
+import 'package:Se_cuida_ai/view/geral_cadastro.dart';
+import 'package:Se_cuida_ai/view/telas%20paciente/paciente_principal.dart';
+import 'package:Se_cuida_ai/view/telas%20profissional/profissional_principal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../controller.dart';
 
 class login extends StatefulWidget {
 
@@ -20,6 +21,7 @@ class _loginState extends State<login> {
   TextEditingController _controllerSenha = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  Controller controller = Controller();
 
   String msgErro = "";
   Timer timer;
@@ -41,16 +43,10 @@ class _loginState extends State<login> {
       //if(a){
         //timer.cancel();
         if (dados != null && dados["tipo"] == "0" ){
-          print("home paciente");
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(
-                  builder: (context) => homePaciente()));
+          controller.realizar_login(context, "0");
         }
         else{
-          print("home profissional");
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(
-                  builder: (context) => homeProfissional()));
+          controller.realizar_login(context, "1");
         }
      /* }else{
         showDialog(
@@ -206,7 +202,7 @@ class _loginState extends State<login> {
 
   @override
   void dispose() {
-    timer.cancel();
+    //timer.cancel();
     super.dispose();
   }
 

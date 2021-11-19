@@ -1,12 +1,13 @@
 
 import 'dart:io' show Platform;
+import 'package:Se_cuida_ai/model/profissional.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../model/profissional.dart';
+import '../../controller.dart';
 import 'paciente_comentario.dart';
 
 class perfilProfissional extends StatefulWidget {
@@ -22,13 +23,13 @@ class _perfilProfissionalState extends State<perfilProfissional>{
 
   Profissional profissional = Profissional();
   Profissional _profissionalHelp = Profissional();
+  Controller controller = Controller();
   List<String> favoritos = [];
   String _idUserLogado;
 
   Future<List<Profissional>> _recuperar_favoritos() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
+
+    print(_idUserLogado);
 
     List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
 
@@ -37,7 +38,6 @@ class _perfilProfissionalState extends State<perfilProfissional>{
     for (var j in fav){
       temp2.add(j);
     }
-
     setState(() {
       favoritos =  temp2;
     });
@@ -45,7 +45,6 @@ class _perfilProfissionalState extends State<perfilProfissional>{
     temp2 = null;
 
     return fav;
-
   }
 
   void _favorito(String uid_profissional) {
@@ -113,9 +112,16 @@ class _perfilProfissionalState extends State<perfilProfissional>{
     Share.share("Olha esse profissional que eu entrei no 'Se cuida aí '");
   }
 
+  _recuprando_id() async {
+    String v = await controller.recuperar_id_pac();
+    _idUserLogado = v;
+    return v;
+  }
+
   @override
   void initState() {
     super.initState();
+    _recuprando_id();
     _recuperarDadosUser();
     _recuperar_favoritos();
   }

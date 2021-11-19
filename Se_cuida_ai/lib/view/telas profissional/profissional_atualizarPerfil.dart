@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+
+import '../../controller.dart';
 
 class atualizarPerfil extends StatefulWidget {
 
@@ -28,8 +28,10 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
   File _imgtemp;
   bool _statusUpload = false;
   String _urlperfil;
-  Profissional p = Profissional();
   String msgError = "";
+
+  Controller controller = Controller();
+  Profissional p = Profissional();
 
   void _validarDados(){
     String nome = _controllerNome.text;
@@ -46,7 +48,28 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
               setState(() {
                 msgError = "";
               });
+
               _atualizarDados();
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // retorna um objeto do tipo Dialog
+                    return AlertDialog(
+                      title: new Text("Dados atualizados com sucesso!"),
+                      actions: <Widget>[
+                        // define os botões na base do dialogo
+                        TextButton(
+                          child: new Text("Ok"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+
 
             } else{
               setState(() {
@@ -74,44 +97,20 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     }
   }
 
-  void _recuperarDadosUser() async{
+  void _recuperarDadosUser() async {
 
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
-    print(_idUserLogado);
-
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentSnapshot snapshot = await db.collection("profissional")
-        .doc(_idUserLogado)
-        .get();
-
-    Map<String, dynamic> dados = snapshot.data();
-
-    p.email = dados["email"];
-    p.dt_nascimento = dados["dt_nascimento"];
-    p.nome = dados["nome"];
-    p.imgPerfil = dados["imgPerfil"];
-    p.sobrenome = dados["sobrenome"];
-    p.especializacao = dados["especializacao"];
-    p.numero_cel = dados["numero_cel"];
-    p.genero = dados["genero"];
-    p.descricao = dados["descricao"];
-    p.registro = dados["registro"];
-    p.tipo = dados["tipo"];
-    p.senha = dados["senha"];
-    p.uid = dados["uid"];
-    p.endereco = dados["endereco"];
-    p.numComente = dados["numComente"];
-
-    _controllerNome.text = dados["nome"];
-    _controllerEmail.text = dados["email"];
-    _controllerSobrenome.text = dados["sobrenome"];
-    _controllerDescricao.text = dados["descricao"];
-    _controllerCelular.text =  dados["numero_cel"];
-    _controllerEndereco.text =  dados["endereco"];
-    _urlperfil = dados["imgPerfil"];
-
+    p = await controller.recuperarDados();
+    if(p == null){print("erro dados recuperados"); return;}
+    print(p.uid);
+    _idUserLogado = p.uid;
+    _controllerNome.text = p.nome;
+    _controllerEmail.text = p.email;
+    _controllerSobrenome.text = p.sobrenome;
+    _controllerDescricao.text = p.descricao;
+    _controllerCelular.text =  p.numero_cel;
+    _controllerEndereco.text =  p.endereco;
+    _urlperfil = p.imgPerfil;
+    print("foi");
   }
 
   void _atualizarDados() {
@@ -120,23 +119,10 @@ class _atualizarPerfilState extends State<atualizarPerfil> {
     p.sobrenome = _controllerSobrenome.text;
     p.descricao = _controllerDescricao.text;
     p.numero_cel = _controllerCelular.text;
-
-    FirebaseAuth auth = FirebaseAuth.instance;
-
-    auth.signInWithEmailAndPassword(
-        email: p.email,
-        password: p.senha
-    ).then((userCredencial){
-      userCredencial.user.updateEmail(_controllerEmail.text).catchError((error){
-        print("erro:::"+error.toString());
-      });
-    });
-
     p.email = _controllerEmail.text;
-    print(p.imgPerfil);
-    print(_urlperfil);
-    p.atualizarDados(p, _idUserLogado);
+    p.endereco =  _controllerEndereco.text;
 
+    p.atualizarDados(p, _idUserLogado);
 
   }
 

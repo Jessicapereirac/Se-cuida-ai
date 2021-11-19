@@ -1,14 +1,11 @@
 import 'package:Se_cuida_ai/model/paciente.dart';
-import 'package:Se_cuida_ai/telas%20paciente/paciente_principal.dart';
-import 'package:Se_cuida_ai/telas%20profissional/profissional_cadastro.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import 'geral_login.dart';
+import '../controller.dart';
 
 class cadastroGeral extends StatefulWidget {
 
@@ -21,6 +18,8 @@ class _cadastroGeralState extends State<cadastroGeral> {
   List<Gender> genders = new List<Gender>();
   String _tipoUser = "";
   String _userGender = "";
+
+  Controller controller = Controller();
 
   String msgErro = "";
   String msgErroApp = "";
@@ -82,23 +81,9 @@ class _cadastroGeralState extends State<cadastroGeral> {
 
                     if(_tipoUser == "0"){
                       _cadastrarUsuario(paciente);
-                      if(msgErroApp == 'ok'){
-
-                        print("home paciente");
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(
-                                builder: (context) => login()));
-                      }
-
+                      if(msgErroApp == 'ok'){controller.realizar_login(context, "0");}
                     }
-
-                    else if(_tipoUser == "1" ){
-                      print("tela profissional-cadastro");
-                      Navigator.push(context,
-                          MaterialPageRoute(
-                              builder: (context) => cadastroProfissional(paciente)));
-                    }
+                    else if(_tipoUser == "1" ){controller.continuar_cadastro(context,paciente);}
 
                   } else{
                     setState(() {

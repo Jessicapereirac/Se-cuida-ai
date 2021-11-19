@@ -1,9 +1,10 @@
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/telas%20paciente/paciente_perfildoFuncionario.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import '../../controller.dart';
+import 'paciente_perfildoFuncionario.dart';
 
 class paciente_pesquisar extends StatefulWidget {
 
@@ -15,6 +16,7 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
 
   Profissional _profissionalHelp = Profissional();
   List<Profissional> profissionais = [];
+  Controller controller = Controller();
   List<String> favoritos = [];
   String _idUserLogado;
 
@@ -41,13 +43,11 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
     profissionais = [];
     List p = await _profissionalHelp.filtrar_profissionais(busca);
 
-
     List<Profissional> temp3 = [];
 
     for (var i in p) {
       temp3.add(i);
     }
-
     setState(() {
       profissionais = temp3;
     });
@@ -59,14 +59,11 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
         _recuperar_profissionais();
       });
     }
-
   }
 
   void _recuperar_favoritos() async {
 
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
+    _idUserLogado = controller.recuperar_id_pac();
 
     List fav = await _profissionalHelp.recuperar_favoritos(_idUserLogado);
     List<String> temp = [];

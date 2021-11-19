@@ -45,7 +45,6 @@ class _telaInicialState extends State<telaInicial> {
               builder: (context) => listaProfissional(es)));
     },
     child: Container(
-
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(

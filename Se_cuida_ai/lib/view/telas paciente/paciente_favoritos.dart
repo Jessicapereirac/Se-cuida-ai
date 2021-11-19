@@ -1,68 +1,90 @@
+import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
-import 'package:Se_cuida_ai/telas%20paciente/paciente_perfildoFuncionario.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class listaProfissional extends StatefulWidget {
+import '../../controller.dart';
+import 'paciente_perfildoFuncionario.dart';
 
-  String especializacao;
-  listaProfissional(this.especializacao);
+class favoritos extends StatefulWidget {
+
 
   @override
-  _listaProfissionalState createState() => _listaProfissionalState();
+  _favoritosState createState() => _favoritosState();
 }
 
-class _listaProfissionalState extends State<listaProfissional>  {
+class _favoritosState extends State<favoritos> {
 
   Profissional _profissionalHelp = Profissional();
+  Paciente _pacienteHelp = Paciente();
   List<Profissional> profissionais = [];
+  List<String> favoritos = [];
+  String _idUserLogado;
+  Controller controller = Controller();
 
-  Future<List<Profissional>> _recuperar_profissionais() async {
-
-    List p = await  _profissionalHelp.recuperar_profissionais(widget.especializacao);
+  _recuperar_profissionais() async {
+    List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
+    List p = await  _pacienteHelp.profissionais_favoritos(fav);
 
     List<Profissional> temp = [];
+    List<String> temp2 = [];
 
     for (var i in p){
       temp.add(i);
     }
+    for (var j in fav){
+
+      temp2.add(j);
+    }
 
     setState(() {
       profissionais = temp;
+      favoritos =  temp2;
     });
 
-    temp = null;
-
+    temp2 = temp = null;
     return profissionais;
 
+  }
+
+  void _favorito(String uid_profissional) async {
+
+    if(favoritos.contains(uid_profissional)){
+      favoritos.remove(uid_profissional);
+    }else{
+      favoritos.add(uid_profissional);
+    }
+    _profissionalHelp.atualizar_favoritos(favoritos, _idUserLogado);
+  }
+
+  _recuprando_id() async {
+    String v = await controller.recuperar_id_pac();
+    _idUserLogado = v;
+    return v;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _recuprando_id();
     _recuperar_profissionais();
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:AppBar(
-          elevation: 0,
-          backgroundColor: Colors.black,
-          title: Text("Se cuida aí"),
-        ),
         backgroundColor: Colors.grey[100],
         body: FutureBuilder(
             future:_recuperar_profissionais(),
             builder: (context, snapshot){
-              if(profissionais.isNotEmpty){
+              if(favoritos.isNotEmpty){
                 return _viewList();
               }
               else{
-                return Center(child: CircularProgressIndicator());
+                return Center(child: Text("Você não possui favoritos"));
               }
             }
 
@@ -83,12 +105,10 @@ class _listaProfissionalState extends State<listaProfissional>  {
       });
 
   Widget _cardprofissional(Profissional p,int index) => GestureDetector(
-
     onTap: (){
       Navigator.push(context,
           MaterialPageRoute(
               builder: (context) => perfilProfissional(p)));
-
     },
     child: Container(
         height: double.infinity,
@@ -106,10 +126,13 @@ class _listaProfissionalState extends State<listaProfissional>  {
                   )
               )
             ]
+
         ),
         padding: EdgeInsets.all(20),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
           children: [
             CircleAvatar(
               radius: 50,
@@ -137,22 +160,42 @@ class _listaProfissionalState extends State<listaProfissional>  {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Padding(
-                      padding: EdgeInsets.only(top:8, bottom: 8, right:8, left:8),
-                      child: Text(
-                        p.descricao,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: HexColor('#4b0082'), fontSize: 20,fontWeight: FontWeight.bold ,
-                        ),
-                        textAlign: TextAlign.center,
-                      ))
+                  Expanded(child: Padding(
+                    padding: EdgeInsets.only(top:8, bottom: 8, right:2, left:2),
+                    child: Text(
+                      p.especializacao,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: HexColor('#4b0082'), fontSize: 15,fontWeight: FontWeight.bold ,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                  ))
                 ],
+
               ),
-            )
+            ),
+            GestureDetector(
+                onTap: (){
+                  setState(() {
+                    _favorito(p.uid);
+                  });
+                },
+                child: favoritos.contains(p.uid)
+                    ? IconTheme(
+                    data: IconThemeData(
+                      size: 27,
+                    ),
+                    child:  Icon(Icons.favorite))
+                    : IconTheme(
+                    data: IconThemeData(
+                      size: 27,
+                    ),
+                    child:  Icon(Icons.favorite_border)))
+
           ],
         )
     ),
   );
 }
-

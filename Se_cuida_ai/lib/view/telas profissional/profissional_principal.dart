@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../../controller.dart';
 import 'profissional_navegacao.dart';
 import 'profissional_atualizarPerfil.dart';
 
@@ -15,10 +16,11 @@ class homeProfissional extends StatefulWidget {
 
 class _homeProfissionalState extends State<homeProfissional> {
 
-  int itemselect;
+  int itemselect = 0;
   String _idUserLogado;
   Color backgoundColor = Colors.white;
-  Profissional controllerP = Profissional();
+  Controller controller = Controller();
+  Controller controllerP = Controller();
 
   List<String> escolhas = ["Apagar conta","Sair"];
   List<NavigationItem> itens = [
@@ -38,13 +40,7 @@ class _homeProfissionalState extends State<homeProfissional> {
   }
 
   Future<String> _recupera_profissional() async {
-
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User userLogado = await auth.currentUser;
-    _idUserLogado = userLogado.uid;
-
-    return userLogado.uid;
-
+    return _idUserLogado = controllerP.recuperar_id_prof();
   }
 
   Widget buildPageView(){
@@ -62,7 +58,6 @@ class _homeProfissionalState extends State<homeProfissional> {
 
   void mudarbotao(int index){
     setState(() {
-      itemselect = index;
       _pageController.animateToPage(index, duration: Duration(milliseconds: 270), curve: Curves.ease);
     });
   }
@@ -79,7 +74,7 @@ class _homeProfissionalState extends State<homeProfissional> {
     }
   }
 
-  void _deslogar() async {controllerP.deslogar_profissional(context);}
+  void _deslogar() async {controller.deslogar_profissional(context);}
 
   _apagar(){
     showDialog(
@@ -88,13 +83,13 @@ class _homeProfissionalState extends State<homeProfissional> {
         // retorna um objeto do tipo Dialog
         return AlertDialog(
           title: new Text("Apagar conta"),
-          content: new Text("Tem certeza qeu desejar apagar sua conta?"),
+          content: new Text("Tem certeza que desejar apagar sua conta?"),
           actions: <Widget>[
             // define os botões na base do dialogo
             TextButton(
               child: new Text("Confirmar"),
               onPressed: () {
-                controllerP.apagar_profissional(context);
+                controller.apagar_profissional(context);
               },
             ),
             TextButton(
