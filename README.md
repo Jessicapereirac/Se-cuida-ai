@@ -23,32 +23,31 @@ O projeto consiste em um aplicativo chamado "Se cuida aí" que chega com o intui
 ### Requisitos
  - Android Studio
  - Flutter SDK
- - Java JDK (Versão 11) //TODO
+ - Java JDK (Versão 11)
  - Android SDK
 
 ## 📲 Como utilizar? 
 
-### ▶️ Via código fonte //TODO
+### ▶️ Via código fonte
  
 Para verificar se tudo está configurado corretamente, caso não esteja vá ate o step de instalação.
 
-Rode o seguinte comando:
+Rode o seguinte comando e verifique se o ambiente foi setado com sucesso:
 
 ```
 $ flutter doc
 ```
 
-### Clone //TODO
+### Clone
 - Clone este repositório na sua máquina local
 ```
 $ git clone https://github.com/Jessicapereirac/Projeto-final/tree/main/Se_cuida_ai
 ```
+Rode o seguinte comando:
 
-## ▶️ Via APK //TODO
-
-### Requisitos
- - Dispositivo Android (SDK mínimo 16)
- - Conexão via USB
+```
+$ flutter run
+```
  
 ### Passos
 
@@ -60,13 +59,17 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Dart](https://dart.dev)
 
 ## 📚 Bibliotecas
-incompleto
 
 As seguintes bibliotecas foram usadas na construção do projeto:
-- [BLoC](https://pub.dev/packages/bloc)
-- [Rx Dart](https://pub.dev/packages/rxdart)
+- [Launcher Icons](https://pub.dev/packages/bloc)
+- [Share](https://pub.dev/packages/share)
+- [Launcher Url](https://pub.dev/packages/url_launcher)
+- [Image Picker](https://pub.dev/packages/image_picker)
+- [Intl](https://pub.dev/packages/intl)
+- [Colors](https://pub.dev/packages/hexcolor)
+- [Phone Field](https://pub.dev/packages/intl_phone_field)
+- [Material Design](https://pub.dev/packages/material_design_icons_flutter)
 - [Cloud Firestore](https://pub.dev/packages/cloud_firestore)
+- [Firebase Core](https://pub.dev/packages/firebase_core)
 - [Firebase Auth](https://pub.dev/packages/firebase_auth)
 - [Firebase Storage](https://pub.dev/packages/firebase_storage)
-- [Share](https://pub.dev/packages/share)
-- [HTTP](https://pub.dev/packages/http)
