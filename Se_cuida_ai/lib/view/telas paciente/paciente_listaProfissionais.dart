@@ -1,3 +1,4 @@
+import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

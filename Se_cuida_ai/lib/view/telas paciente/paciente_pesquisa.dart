@@ -1,3 +1,4 @@
+import 'package:Se_cuida_ai/model/paciente.dart';
 import 'package:Se_cuida_ai/model/profissional.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class paciente_pesquisar extends StatefulWidget {
 class _paciente_pesquisarState extends State<paciente_pesquisar> {
 
   Profissional _profissionalHelp = Profissional();
+  Paciente _pacienteHelp = Paciente();
   List<Profissional> profissionais = [];
   Controller controller = Controller();
   List<String> favoritos = [];
@@ -23,60 +25,58 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
   TextEditingController _pesquisaController = TextEditingController();
 
   Future<List<Profissional>> _recuperar_profissionais() async {
-    List p = await _profissionalHelp.recuperar_profissionais('');
-    List<Profissional> temp = [];
 
-    for (var j in p) {
-      temp.add(j);
+    List p = await  _profissionalHelp.recuperar_profissionais('');
+    List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
+
+    List<Profissional> temp = [];
+    List<String> temp2 = [];
+
+    for (var i in p){
+      temp.add(i);
+    }
+    for (var j in fav){
+      temp2.add(j);
     }
 
     setState(() {
       profissionais = temp;
+      favoritos =  temp2;
     });
 
-    temp = null;
+    temp2 = temp = null;
 
-    return temp;
+    return profissionais;
+
   }
 
   Future<List> _recuperar_profissionais_filtrado(String busca) async {
     profissionais = [];
     List p = await _profissionalHelp.filtrar_profissionais(busca);
+    List fav = await  _profissionalHelp.recuperar_favoritos(_idUserLogado);
 
-    List<Profissional> temp3 = [];
+    List<Profissional> temp = [];
+    List<String> temp2 = [];
 
-    for (var i in p) {
-      temp3.add(i);
+    for (var i in p){
+      temp.add(i);
     }
+    for (var j in fav){
+      temp2.add(j);
+    }
+
     setState(() {
-      profissionais = temp3;
+      profissionais = temp;
+      favoritos =  temp2;
     });
 
-    temp3 = null;
+    temp2 = temp = null;
 
     if (busca.isEmpty) {
       setState(() {
         _recuperar_profissionais();
       });
     }
-  }
-
-  void _recuperar_favoritos() async {
-
-    _idUserLogado = controller.recuperar_id_pac();
-
-    List fav = await _profissionalHelp.recuperar_favoritos(_idUserLogado);
-    List<String> temp = [];
-
-    for (var i in fav) {
-      temp.add(i);
-    }
-
-    setState(() {
-      favoritos = temp;
-    });
-
-    temp = null;
   }
 
   void _favorito(String uid_profissional) async {
@@ -89,12 +89,18 @@ class _paciente_pesquisarState extends State<paciente_pesquisar> {
     _profissionalHelp.atualizar_favoritos(favoritos, _idUserLogado);
   }
 
+  _recuprando_id() async {
+    String v = await controller.recuperar_id_pac();
+    _idUserLogado = v;
+    return v;
+  }
+
 
   @override
   void initState() {
     super.initState();
+    _recuprando_id();
     _recuperar_profissionais();
-    _recuperar_favoritos();
   }
 
   @override

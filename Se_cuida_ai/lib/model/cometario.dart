@@ -59,16 +59,17 @@ class Comentario {
 
       var dados = item.data();
 
-      Comentario c = Comentario();
+      if(dados["uidProfissonal"] == _uidProfissional){
+        Comentario c = Comentario();
 
-      c.id =dados ["id"];
-      c.experiencia = dados["experiencia"];
-      c.comentario = dados["comentario"];
-      c.uidDono = dados["uidDono"];
-      c.uidProfissional = dados["uidProfissonal"];
+        c.id =dados ["id"];
+        c.experiencia = dados["experiencia"];
+        c.comentario = dados["comentario"];
+        c.uidDono = dados["uidDono"];
+        c.uidProfissional = dados["uidProfissonal"];
 
-      list.add(c);
-
+        list.add(c);
+      }
     }
 
     return list;
