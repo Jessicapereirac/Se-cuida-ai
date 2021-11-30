@@ -16,7 +16,11 @@ Esse projeto possui fins educativos para projeto final de Jéssica Pereira.
 O projeto consiste em um aplicativo chamado "Se cuida aí" que chega com o intuito de ajudar pessoas a encontrar prestadores de serviços na área da saúde que trabalham no regime de homecare.
 
 ## 👨‍💻 Preview
-~em produção~
+
+
+https://user-images.githubusercontent.com/55261082/144138159-485fc68b-9c78-4a60-89b5-2c78276a487d.mov
+
+
 
 ## 🔧 Instalação
 
