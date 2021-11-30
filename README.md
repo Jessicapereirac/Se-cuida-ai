@@ -17,9 +17,7 @@ O projeto consiste em um aplicativo chamado "Se cuida aí" que chega com o intui
 
 ## 👨‍💻 Preview
 
-
-https://user-images.githubusercontent.com/55261082/144138159-485fc68b-9c78-4a60-89b5-2c78276a487d.mov
-
+![preview-user](https://user-images.githubusercontent.com/55261082/144140626-61873243-0cab-4d81-9b9c-2133532f87d7.gif)
 
 
 ## 🔧 Instalação
