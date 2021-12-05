@@ -115,6 +115,7 @@ class _perfilProfissionalState extends State<perfilProfissional>{
   _recuprando_id() async {
     String v = await controller.recuperar_id_pac();
     _idUserLogado = v;
+     _recuperar_favoritos();
     return v;
   }
 
