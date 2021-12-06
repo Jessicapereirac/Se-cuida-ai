@@ -23,6 +23,7 @@ class _pagProfissionalState extends State<pagProfissional> {
   Profissional p = Profissional();
   Comentario _comentarioHelp = Comentario();
   Profissional _profissionalHelp = Profissional();
+
   List<Comentario> comente = [];
   int num_comente ;
   String _idUserLogado;
@@ -49,7 +50,7 @@ class _pagProfissionalState extends State<pagProfissional> {
 
     setState(() {
       comente = temp;
-      num_comente =comente.length;
+      num_comente = comente.length;
     });
 
     temp = null;
@@ -59,9 +60,17 @@ class _pagProfissionalState extends State<pagProfissional> {
     Share.share("Olha esse profissional que eu entrei no 'Se cuida aí '");
   }
 
+  _recuprando_id() async {
+    String v = await controller.recuperar_id_prof();
+    _idUserLogado = v;
+    _recuperar_comentarios();
+    return v;
+  }
+
   @override
   void initState() {
     super.initState();
+    _recuprando_id();
     _recuperarDadosUser();
     _recuperar_comentarios();
   }
@@ -239,47 +248,49 @@ class _pagProfissionalState extends State<pagProfissional> {
                 padding: EdgeInsets.only(right:15, left: 18),
                 child: Row(
                   children: <Widget>[
-                    GestureDetector(
-                      child: Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 22,horizontal: 16),
-                          decoration: BoxDecoration(
-                              color: Color(0xffFBB97C),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                      color: Color(0xffFCCA9B),
-                                      borderRadius: BorderRadius.circular(16)
-                                  ),
-                                  child: Image.asset("images/comente.png")),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Container(
-                                child: Text(
-                                  "Comentarios sobre você",
-                                  style: TextStyle(color: Colors.white,
-                                      fontSize: 17),
+                    Expanded(
+                        child: GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              p.numComente = num_comente;
+                              _profissionalHelp.atualizarDados(p, p.uid);
+                              Navigator.push(context,
+                                  MaterialPageRoute(
+                                      builder: (context) => comentarios(p)));
+
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 22,horizontal: 16),
+                            decoration: BoxDecoration(
+                                color: Color(0xffFBB97C),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xffFCCA9B),
+                                        borderRadius: BorderRadius.circular(16)
+                                    ),
+                                    child: Image.asset("images/comente.png")),
+                                SizedBox(
+                                  width: 15,
                                 ),
-                              ),
-                            ],
+                                Container(
+                                  child: Text(
+                                    "Comentarios sobre você",
+                                    style: TextStyle(color: Colors.white,
+                                        fontSize: 17),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                      onTap:(){
-                        setState(() {
-                          p.numComente = num_comente;
-                          _profissionalHelp.atualizarDados(p, p.uid);
-                          Navigator.push(context,
-                              MaterialPageRoute(
-                                  builder: (context) => comentarios(p)));
 
-                        });} ,
-                    ),
 
                   ],
                 ),)
